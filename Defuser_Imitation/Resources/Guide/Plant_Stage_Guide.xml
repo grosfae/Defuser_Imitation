@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+  <FlowDocument.Resources>
+    <Style TargetType="Paragraph">
+      <Setter Property="Margin" Value="0 2"/>
+    </Style>
+  </FlowDocument.Resources>
+  
+    <Paragraph FontWeight="Bold" FontSize="24">ОБ ЭТАПЕ АКТИВАЦИИ</Paragraph>
+    <Paragraph FontSize="16">
+        Во время этапа активации необходимо ввести код для активации устройства
+        за определённое время. Параметрами времени раунда и кода устройства
+        можно управлять в настройках.
+    </Paragraph>
+    
+    <Paragraph Margin="0 10">
+      <Image Source="/Resources/Guide_Images/plant_guide_image.jpg" Height="370"/>
+    </Paragraph>
+    
+    <Paragraph FontWeight="Bold" FontSize="24" Margin="0 15 0 0">ОТОБРАЖЕНИЕ ВРЕМЕНИ ТАЙМЕРА ДЛЯ АКТИВАЦИИ</Paragraph>
+    <Paragraph FontSize="16">
+        За отображение времени этапа активации отвечает белая убывающая шкала, которая находится вверху экрана этапа активации. 
+        Шкала убывает - время уменьшается.
+    </Paragraph>
+    <Paragraph FontSize="16">
+        Во время этапа активации проигрывается определённый звук. Когда
+        оставшееся время до конца этапа 15 секунд, то проигрывается другой звук,
+        сигнализирующий о малом оставшемся времени.
+    </Paragraph>
+    
+    <Paragraph FontWeight="Bold" FontSize="24" Margin="0 15 0 0">СОБЫТИЯ ПРИ ВВОДЕ КОДА</Paragraph>
+    <Paragraph FontSize="16">
+        При вводе или стирании цифр кода переход к следующей цифре происходит
+        автоматически.
+    </Paragraph>
+    <Paragraph FontSize="16">
+        В блоке для ввода кода некоторые цифры могут быть заполнены изначально,
+        если указать это, за это отвечает настройка «Символы ручного ввода».
+    </Paragraph>
+    <Paragraph FontSize="16">
+        При вводе правильного кода наступит этап деактивации устройства и будет
+        показан соответствующий экран.
+    </Paragraph>
+    <Paragraph FontSize="16">
+        При вводе неправильного кода блок кода будет окрашен в определённый
+        оттенок красного цвета.
+    </Paragraph>
+    <Paragraph FontSize="16">
+        Если не ввести код до окончания времени таймера обратного отсчёта, то
+        раунд будет завершён, и будет выведено соответствующие сообщение.
+    </Paragraph>
+    
+    <Paragraph FontWeight="Bold" FontSize="24" Margin="0 15 0 0">ВОЗМОЖНЫЕ В ПРОГРАММЕ ИСХОДЫ РАУНДА НА ЭТАПЕ АКТИВАЦИИ</Paragraph>
+    <Paragraph FontSize="16">
+        Экран с исходом раунда с соответствующим сообщением будет выведен в
+        зависимости от определённых действий.
+    </Paragraph>
+    
+    <Paragraph FontStyle="Italic" FontSize="20" Margin="0 15 0 0">УСТРОЙСТВО НЕ УСПЕЛИ УСТАНОВИТЬ</Paragraph>
+    <Paragraph FontSize="16">
+        Данный исход возникает, если не успеть ввести правильный код до окончания времени для
+        деактивации. Предполагается победа стороны защиты.
+    </Paragraph>
+</FlowDocument>

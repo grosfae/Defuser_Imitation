@@ -1,0 +1,21 @@
+﻿<UserControl x:Name="userControl" x:Class="Defuser_Imitation.Components.UserControls.SliderControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Defuser_Imitation.Components.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="48" d:DesignWidth="400" Loaded="userControl_Loaded">
+    <UserControl.Background>
+        <SolidColorBrush Color="White" Opacity="0.6"/>
+    </UserControl.Background>
+    <Grid>
+        <Button Name="LeftBtn" Height="48" Width="48" Focusable="False" HorizontalAlignment="Left" Foreground="#FF121212" Style="{StaticResource ArrowsButton}" Click="LeftBtn_Click" MouseEnter="ArrowBtn_MouseEnter" MouseLeave="ArrowBtn_MouseLeave" IsEnabledChanged="ArrowBtn_IsEnabledChanged">
+            <Path Data="M9 0H14L5 11L14 22H9L0 11L9 0Z" Fill="{Binding Foreground, ElementName=LeftBtn}"/>
+        </Button>
+        <Slider Name="SliderElement" Style="{DynamicResource SliderStyle}" Height="48" Width="304" Focusable="False" Value="{Binding SliderValue, ElementName=userControl}" Minimum="{Binding Minimum, ElementName=userControl}" Maximum="{Binding Maximum, ElementName=userControl}"/>
+        <Button Name="RightBtn" Height="48" Width="48" Focusable="False" HorizontalAlignment="Right" Foreground="#FF121212" Style="{StaticResource ArrowsButton}" Click="RightBtn_Click" MouseEnter="ArrowBtn_MouseEnter" MouseLeave="ArrowBtn_MouseLeave" IsEnabledChanged="ArrowBtn_IsEnabledChanged">
+            <Path Data="M0 0H5L14 11L5 22H0L9 11L0 0Z" Fill="{Binding Foreground, ElementName=RightBtn}"/>
+        </Button>
+    </Grid>
+</UserControl>

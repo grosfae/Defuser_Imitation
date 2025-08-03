@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Defuser_Imitation.Components.UserControls.RoundPauseControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Defuser_Imitation.Components.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="1920">
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush Color="#FF121212" Opacity="0.8"/>
+        </Grid.Background>
+        <Viewbox Width="1920" Height="1080">
+            <Grid Width="1920" Height="1080">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 140">
+                    <Viewbox VerticalAlignment="Bottom" Width="500">
+                        <StackPanel>
+                            <TextBlock FontFamily="{StaticResource BravoFont}" Foreground="White" Text="ПАУЗА" FontSize="48" FontWeight="Bold" VerticalAlignment="Top" Margin="0 0 0 40" HorizontalAlignment="Center"/>
+                            <Button Name="ResumeBtn" Style="{StaticResource MessageButton}" Height="52" Width="400" HorizontalContentAlignment="Left" Content="Продолжить" Padding="30 0 0 0" FontSize="28" Click="ResumeBtn_Click"/>
+                            <Button Name="MenuBtn" Style="{StaticResource MessageButton}" Height="52" Width="400" Margin="0 20 0 0" HorizontalContentAlignment="Left" Content="Выход в меню" Padding="30 0 0 0" FontSize="28" Click="MenuBtn_Click"/>
+                        </StackPanel>
+                    </Viewbox>
+                </StackPanel>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

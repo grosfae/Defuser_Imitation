@@ -1,0 +1,142 @@
+﻿<Application x:Class="Defuser_Imitation_Updater.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Defuser_Imitation_Updater"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <!--Fonts-->
+        <FontFamily x:Key="RobotoCondensedFont">pack://application:,,,/Resources/Fonts/#Roboto Condensed</FontFamily>
+        <FontFamily x:Key="RobotoMonoFont">pack://application:,,,/Resources/Fonts/#Roboto Mono Thin</FontFamily>
+
+        <!--Buttons Style-->
+        <Style TargetType="Button" x:Key="MinimizeWindowButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#FF585858"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+                            <Rectangle Fill="{TemplateBinding Foreground}" Width="20" Height="4"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.1" To="White"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.1" To="#FF585858"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Button" x:Key="CloseWindowButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#FF585858"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+                            <Viewbox VerticalAlignment="Center" HorizontalAlignment="Center" Height="17" Width="17">
+                                <Path Data="M0 0H70L256 191L442 0H512V70L322.5 255.5L512 442V512H442L256 321L70 512H0V442L190 257L0 70V0Z" RenderTransformOrigin="0.5 0.5" Fill="{TemplateBinding Foreground}"/>
+                            </Viewbox>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.1" To="White"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.1" To="#FF585858"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="GitHubMenuButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="/Resources/Fonts/#BravoRG"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Name="MainBorder" Background="{TemplateBinding BorderBrush}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" RenderTransformOrigin="0.5,0.5">
+                            <Grid>
+                                <StackPanel Name="StWhite" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="1">
+                                    <Image Source="/Resources/GitHub/github-mark-white.png" Height="20" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="Fant"/>
+                                    <Image Source="/Resources/GitHub/GitHub_Logo_White.png" Height="20" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="Fant"/>
+                                </StackPanel>
+
+                                <StackPanel Name="StBlack" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0">
+                                    <Image Source="/Resources/GitHub/github-mark.png" Height="20" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="Fant"/>
+                                    <Image Source="/Resources/GitHub/GitHub_Logo.png" Height="20" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="Fant"/>
+                                </StackPanel>
+                            </Grid>
+                            <Border.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Border.RenderTransform>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="StWhite" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="StBlack" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="MainBorder" Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)" To="1.2" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="MainBorder" Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)" To="1.2" Duration="0:0:0.1"/>
+
+                                            <ColorAnimation Storyboard.TargetProperty="(Button.BorderBrush).(SolidColorBrush.Color)" To="White" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="StWhite" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="StBlack" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="MainBorder" Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="MainBorder" Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.1"/>
+
+                                            <ColorAnimation Storyboard.TargetProperty="(Button.BorderBrush).(SolidColorBrush.Color)" To="#FF121212" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Application.Resources>
+</Application>
