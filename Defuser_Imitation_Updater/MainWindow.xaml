@@ -1,0 +1,49 @@
+﻿<Window x:Class="Defuser_Imitation_Updater.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Defuser_Imitation_Updater"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="{x:Null}"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        BorderThickness="1"
+        BorderBrush="#FF2BA1E7"
+        Title="Defuser_Imitation_Updater" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#FF1E1E1E" Height="40" Name="Header" Cursor="">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
+                <Image Source="/Resources/updater_white_icon.ico" RenderOptions.BitmapScalingMode="Fant" Width="30" Height="30" Margin="10 0 0 0" VerticalAlignment="Center" Cursor=""/>
+                <TextBlock Text="UPDATE" Foreground="White" FontFamily="{StaticResource RobotoMonoFont}" FontWeight="Regular" FontSize="16" VerticalAlignment="Center" Margin="5 0 0 0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="MinimizeBtn" Style="{StaticResource MinimizeWindowButton}" Height="40" Width="40" Click="MinButton_Click"/>
+                <Button Name="CloseBtn" Style="{StaticResource CloseWindowButton}" Height="40" Width="40" Click="CloseButton_Click" Cursor="Hand"/>
+            </StackPanel>
+            <Line X1="0" X2="800" Stroke="#FF2BA1E7" StrokeThickness="1" Stretch="Fill" VerticalAlignment="Bottom"/>
+        </Grid>
+        <Canvas Grid.Row="1" Name="MapCanvas">
+            <Canvas.Background>
+                <ImageBrush ImageSource="/Resources/world_map_background.jpg" Stretch="UniformToFill"/>
+            </Canvas.Background>
+        </Canvas>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0 0 0 30">
+            <TextBlock FontFamily="{StaticResource RobotoMonoFont}" Text="DEFUSER" FontWeight="Thin" FontSize="90" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock FontFamily="{StaticResource RobotoMonoFont}" Text="IMITATION" FontWeight="Thin" FontSize="50" Foreground="White" HorizontalAlignment="Center" Margin="0 -15 0 0"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" VerticalAlignment="Bottom" >
+            <Grid>
+                <TextBlock Name="TbState" FontFamily="{StaticResource RobotoMonoFont}" FontWeight="Thin" Foreground="White" FontSize="20" Padding="10 0 0 4"/>
+                <TextBlock Name="TbRatio" FontFamily="{StaticResource RobotoMonoFont}" FontWeight="Thin" Foreground="White" FontSize="20" HorizontalAlignment="Right" Padding="0 0 10 4"/>
+            </Grid>
+            <ProgressBar Name="PbUpdate" Height="12" Foreground="#FF2BA1E7" Value="0" Visibility="Visible"/>
+        </StackPanel>
+    </Grid>
+</Window>

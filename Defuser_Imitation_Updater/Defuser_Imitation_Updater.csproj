@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <StartupObject></StartupObject>
+    <ApplicationIcon>Resources\updater_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\updater_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Fonts\RobotoCondensed-VariableFont_wght.ttf" />
+    <Resource Include="Resources\Fonts\RobotoMono-VariableFont_wght.ttf" />
+    <Resource Include="Resources\GitHub\github-mark-white.png" />
+    <Resource Include="Resources\GitHub\github-mark.png" />
+    <Resource Include="Resources\GitHub\GitHub_Logo.png" />
+    <Resource Include="Resources\GitHub\GitHub_Logo_White.png" />
+    <Resource Include="Resources\updater_icon.ico" />
+    <Resource Include="Resources\updater_white_icon.ico" />
+    <Resource Include="Resources\world_map_background.jpg" />
+  </ItemGroup>
+
+</Project>

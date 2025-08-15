@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Defuser_Imitation.Components.UserControls.AcceptChangesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Defuser_Imitation.Components.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="1920">
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush Color="#FF121212" Opacity="0.8"/>
+        </Grid.Background>
+        <Viewbox Width="620" Height="1080">
+            <Grid Width="620" Height="1080" Background="#24242A">
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30 170 0 0">
+                    <TextBlock FontFamily="{StaticResource BravoFont}" Foreground="White" Text="ПРИНЯТЬ ИЗМЕНЕНИЯ?" FontSize="80" FontWeight="Bold"/>
+                    <TextBlock FontFamily="{StaticResource BravoFont}" Foreground="White" Text="Настройки сохранились." FontSize="26" Margin="0 30 0 0"/>
+                    <TextBlock FontFamily="{StaticResource BravoFont}" Foreground="White" Text="Сохранить?" FontSize="26"/>
+                </StackPanel>
+                <Viewbox VerticalAlignment="Bottom" Margin="30 0 30 40" Width="540">
+                    <StackPanel>
+                        <Button Name="AcceptBtn" Style="{StaticResource MessageButton}" Height="52" Width="540" HorizontalContentAlignment="Left" Content="Принять" Padding="20 0 0 0" FontSize="28" Click="AcceptBtn_Click"/>
+                        <Button Name="CancelBtn" Style="{StaticResource MessageButton}" Height="52" Width="540" Margin="0 10 0 0" HorizontalContentAlignment="Left" Content="Отмена" Padding="20 0 0 0" FontSize="28" Click="CancelBtn_Click"/>
+                    </StackPanel>
+                </Viewbox>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

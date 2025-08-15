@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+  <FlowDocument.Resources>
+    <Style TargetType="Paragraph">
+      <Setter Property="Margin" Value="0 2"/>
+    </Style>
+  </FlowDocument.Resources>
+
+  <Paragraph FontWeight="Bold" FontSize="24">ВОЗМОЖНОСТЬ ЗАМЕНЫ СТАНДАРТНЫХ ЗВУКОВ</Paragraph>
+  <Paragraph FontSize="16">
+    Стандартные звуки можно заменить на другие. Стандартные звуки находятся по пути: ...\Папка приложения\Resources\Sounds\
+  </Paragraph>
+  <Paragraph FontSize="16">
+    Для замены звукового файла новый файл нужно назвать так же, как и стандартный.
+  </Paragraph>
+  <Paragraph FontSize="16">
+    В качестве форматов звуков следует использовать MP3, WAV или WMA.
+  </Paragraph>
+</FlowDocument>

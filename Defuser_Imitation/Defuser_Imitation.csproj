@@ -1,0 +1,84 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\app_icon.ico</ApplicationIcon>
+    
+    <Version>0.1.0.0</Version>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>0.1.0.0</FileVersion>
+    <InformationalVersion>0.1.0.0</InformationalVersion>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Defuser_Imitation_Updater\Defuser_Imitation_Updater.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Content</OutputItemType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Octokit" Version="14.0.0" />
+    <PackageReference Include="System.Management" Version="9.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app_icon.ico" />
+    <Resource Include="Resources\background_grid.png" />
+    <Resource Include="Resources\controls_background.jpg" />
+    <Resource Include="Resources\Fonts\Aldrich-Regular.ttf" />
+    <Resource Include="Resources\Fonts\BravoRG.otf" />
+    <Resource Include="Resources\Fonts\RobotoCondensed-VariableFont_wght.ttf" />
+    <Resource Include="Resources\GitHub\github-mark-white.png" />
+    <Resource Include="Resources\GitHub\github-mark.png" />
+    <Resource Include="Resources\GitHub\GitHub_Logo.png" />
+    <Resource Include="Resources\GitHub\GitHub_Logo_White.png" />
+    <Resource Include="Resources\Guide\Defuse_Stage_Guide.xml" />
+    <Resource Include="Resources\Guide\Game_Pause_Guide.xml" />
+    <Resource Include="Resources\Guide\Plant_Stage_Guide.xml" />
+    <Resource Include="Resources\Guide\Sounds_Guide.xml" />
+    <Resource Include="Resources\Guide_Images\defuse_guide_image.jpg" />
+    <Resource Include="Resources\Guide_Images\plant_guide_image.jpg" />
+    <Resource Include="Resources\menu_background.jpg" />
+    <Resource Include="Resources\sIgnal_grid_background.jpg" />
+    <Resource Include="Resources\signal_mask.png" />
+    <Content Include="Resources\app_icon.ico" />
+    <Content Include="Resources\Sounds\active_device_last_seconds_sound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\active_device_sound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\plant_stage_last_seconds_sound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\plant_stage_sound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\round_finish_sound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resources\update_button_background.png" />
+  </ItemGroup>
+  
+<ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>
