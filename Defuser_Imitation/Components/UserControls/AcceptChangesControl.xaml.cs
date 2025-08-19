@@ -29,20 +29,19 @@ namespace Defuser_Imitation.Components.UserControls
         {
             InitializeComponent();
             this.Opacity = 0;
-            DoubleAnimation MessageAppearAnimation = new DoubleAnimation()
+            DoubleAnimation messageAppearAnimation = new DoubleAnimation()
             {
                 Duration = TimeSpan.FromSeconds(0.2),
                 To = 1,
-
             }; 
-            this.BeginAnimation(OpacityProperty, MessageAppearAnimation);
+            this.BeginAnimation(OpacityProperty, messageAppearAnimation);
         }
         private void SelfDispose()
         {
-            var ParentElement = this.Parent as Grid;
-            if (ParentElement != null && ParentElement.Children.Contains(this))
+            var parentElement = this.Parent as Grid;
+            if (parentElement != null && parentElement.Children.Contains(this))
             {
-                ParentElement.Children.Remove(this);
+                parentElement.Children.Remove(this);
             }
         }
 

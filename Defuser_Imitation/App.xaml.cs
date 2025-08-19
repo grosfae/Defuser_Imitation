@@ -8,6 +8,12 @@ namespace Defuser_Imitation
     /// </summary>
     public partial class App : Application
     {
-        
+        public static bool UpdateHasBeenAutoChecked = false;
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            GitHubUpdater.CheckAndClearTempFolder();
+            MiscUtilities.DownloadSounds();
+            MiscUtilities.CheckSettings();
+        }
     }
 }

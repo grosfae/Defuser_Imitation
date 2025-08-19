@@ -5,17 +5,17 @@
     <Setting Name="DeviceCode" Type="System.String" Scope="User">
       <Value Profile="(Default)">00000000</Value>
     </Setting>
-    <Setting Name="DefuseCountdown" Type="System.Int32" Scope="User">
+    <Setting Name="DeactivationPhaseCountdown" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
     </Setting>
-    <Setting Name="RoundCountdown" Type="System.Int32" Scope="User">
+    <Setting Name="ActivationPhaseCountdown" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">120</Value>
     </Setting>
-    <Setting Name="ActiveDeviceVolume" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">20</Value>
+    <Setting Name="DeactivationPhaseVolume" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
     </Setting>
-    <Setting Name="RoundVolume" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">20</Value>
+    <Setting Name="ActivationPhaseVolume" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="USBDeviceName" Type="System.String" Scope="User">
       <Value Profile="(Default)">USB-Device-Name</Value>
@@ -31,6 +31,21 @@
     </Setting>
     <Setting Name="NeedToClearTemp" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PreparationPhaseCountdown" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="PreparationPhaseVolume" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="ComplitionPhaseVolume" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="RepositoryName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Defuser_Imitation</Value>
+    </Setting>
+    <Setting Name="RepositoryOwner" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">grosfae</Value>
     </Setting>
   </Settings>
 </SettingsFile>

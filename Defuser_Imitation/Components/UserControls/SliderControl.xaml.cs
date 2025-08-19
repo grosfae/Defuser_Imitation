@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Defuser_Imitation.Components.UserControls
 {
@@ -81,12 +70,12 @@ namespace Defuser_Imitation.Components.UserControls
         }
         private void ArrowBtn_MouseEnter(object sender, MouseEventArgs e)
         {
-            (sender as Button).Opacity = 0.6;
+            ((Button)sender).Opacity = 0.6;
         }
 
         private void ArrowBtn_MouseLeave(object sender, MouseEventArgs e)
         {
-            Button button = sender as Button;
+            Button button = (Button)sender;
             if (button.IsEnabled == true)
             {
                 button.Opacity = 1;
@@ -99,14 +88,14 @@ namespace Defuser_Imitation.Components.UserControls
 
         private void ArrowBtn_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            Button button = sender as Button;
+            Button button = (Button)sender;
             if(button.IsEnabled == false)
             {
-                (sender as Button).Opacity = 0.6;
+                button.Opacity = 0.6;
             }
             else
             {
-                (sender as Button).Opacity = 1;
+                button.Opacity = 1;
             }
         }
 

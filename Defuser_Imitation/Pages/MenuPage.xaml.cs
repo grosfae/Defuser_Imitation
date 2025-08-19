@@ -1,13 +1,11 @@
 ﻿using Defuser_Imitation.Components;
 using Defuser_Imitation.Components.UserControls;
-using System;
 using System.Diagnostics;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 
 namespace Defuser_Imitation.Pages
 {
@@ -16,19 +14,27 @@ namespace Defuser_Imitation.Pages
     /// </summary>
     public partial class MenuPage : Page
     {
-        private bool timerIsAvailable;
+        private DispatcherTimer menuTimer = new DispatcherTimer();
         private bool checkingUpdate;
         private bool needToDownloadUpdate;
         public MenuPage()
         {
             InitializeComponent();
-            TbTime.Text = DateTime.Now.ToString("t");
-            TbDate.Text = DateTime.Now.ToString("D");
-            timerIsAvailable = true;
-            Time_Set();
+            SetTime();
+            menuTimer.Interval = TimeSpan.FromSeconds(1);
+            menuTimer.Tick += MenuTimer_Tick;
+            menuTimer.Start();
             SetVersionText();            
-            SetSearchUpdateText();
-            Task.Run(GitHubCheckUpdateAsync);
+            if (App.UpdateHasBeenAutoChecked == false)
+            {
+                Task.Run(GitHubCheckUpdateAsync);
+                App.UpdateHasBeenAutoChecked = true;
+            }
+        }
+
+        private void MenuTimer_Tick(object? sender, EventArgs e)
+        {
+            SetTime();
         }
         private void CreateMapSpot()
         {
@@ -38,36 +44,31 @@ namespace Defuser_Imitation.Pages
             Canvas.SetTop(mapSpotControl, random.Next(50, 900));
             MapCanvas.Children.Add(mapSpotControl);
         }
-        private async void Time_Set()
+        private void SetTime()
         {
-            while (timerIsAvailable == true)
-            {
-                CreateMapSpot();
-                DateTime now = DateTime.Now;
-                int millisecondsUntilNextSecond = 1000 - now.Millisecond;
-                await Task.Delay(millisecondsUntilNextSecond);
-                TbTime.Text = DateTime.Now.ToString("t");
-                TbDate.Text = DateTime.Now.ToString("D");
-            }
+            CreateMapSpot();
+            TbTime.Text = DateTime.Now.ToString("t");
+            TbDate.Text = DateTime.Now.ToString("D");
         }
         private void PlayBtn_Click(object sender, RoutedEventArgs e)
         {
-            timerIsAvailable = false;
+            menuTimer.Stop();
+            MiscUtilities.SetSoundsVolume();
             NavigationService.Navigate(new PlayPage());
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
-            timerIsAvailable = false;
+            menuTimer.Stop();
             App.Current.Shutdown();
         }
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)
         {
-            SettingsControl SettingsWindow = new SettingsControl();
-            Panel.SetZIndex(SettingsWindow, 3);
-            SettingsWindow.Opacity = 0;
-            PageGrid.Children.Add(SettingsWindow);
-            SettingsWindow.BeginAnimation(OpacityProperty, new DoubleAnimation()
+            SettingsControl settingsWindow = new SettingsControl();
+            Panel.SetZIndex(settingsWindow, 3);
+            settingsWindow.Opacity = 0;
+            PageGrid.Children.Add(settingsWindow);
+            settingsWindow.BeginAnimation(OpacityProperty, new DoubleAnimation()
             {
                 Duration = TimeSpan.FromSeconds(0.2),
                 To = 1,
@@ -75,12 +76,11 @@ namespace Defuser_Imitation.Pages
         }
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
-            if(checkingUpdate == true || GitHubUpdater.canUpdate == false)
+            if(checkingUpdate == true)
             {
                 return;
             }
             needToDownloadUpdate = true;
-            SetSearchUpdateText();
             Task.Run(GitHubCheckUpdateAsync);
         }
         private void GitHubBtn_Click(object sender, RoutedEventArgs e)
@@ -101,7 +101,7 @@ namespace Defuser_Imitation.Pages
         }
         private void SetVersionText()
         {
-            string version = $"{Assembly.GetExecutingAssembly().GetName().Version} version";
+            string version = $"{GitHubUpdater.CurrentVersion} version";
             TbVersion.Text = version;
         }
         private async Task GitHubCheckUpdateAsync()
@@ -110,11 +110,12 @@ namespace Defuser_Imitation.Pages
             {
                 return;
             }
+            checkingUpdate = true;
+            App.Current.Dispatcher.Invoke(SetSearchUpdateText);
+            await GitHubUpdater.CheckUpdate();
             try
             {
-                checkingUpdate = true;
-                await GitHubUpdater.CheckUpdate();
-                if (GitHubUpdater.canUpdate == true)
+                if (GitHubUpdater.CanUpdate == true)
                 {
                     if(needToDownloadUpdate == true)
                     {
@@ -153,14 +154,14 @@ namespace Defuser_Imitation.Pages
         private void SetDefaultUpdateText()
         {
             string updateDefaultText = "Установлена последняя версия".ToUpper();
-            string updateVersionDefaultText = "Текущая версия: ".ToUpper() + GitHubUpdater.currentVersion;
+            string updateVersionDefaultText = "Текущая версия: ".ToUpper() + GitHubUpdater.CurrentVersion;
             TbUpdateText.Text = updateDefaultText;
             TbUpdateVersion.Text = updateVersionDefaultText;
         }
         private void SetNewUpdateText()
         {
             string updateDefaultText = "Доступно обновление".ToUpper();
-            string updateVersionDefaultText = "Новая версия: ".ToUpper() + GitHubUpdater.lastestGitHubVersion;
+            string updateVersionDefaultText = "Новая версия: ".ToUpper() + GitHubUpdater.LastestGitHubVersion;
             TbUpdateText.Text = updateDefaultText;
             TbUpdateVersion.Text = updateVersionDefaultText;
         }

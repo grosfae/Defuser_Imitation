@@ -1,7 +1,4 @@
-﻿using Defuser_Imitation_Updater.Components;
-using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Defuser_Imitation_Updater
 {

@@ -2,18 +2,16 @@
 using Octokit;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Windows;
+using Windows.Networking.Connectivity;
 
 namespace Defuser_Imitation.Components
 {
     public sealed class GitHubUpdater
     {
-        private static readonly string repoOwner = "grosfae";
-        private static readonly string repoName = "Defuser_Imitation";
-        public static readonly string currentVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.1.0.0";
-        public static string? lastestGitHubVersion;
+        private static readonly string repositoryOwner = Settings.Default.RepositoryOwner;
+        private static readonly string repositoryName = Settings.Default.RepositoryName;
         private static string? updateFileUrl;
         private static string? updateFileName;
 
@@ -22,10 +20,12 @@ namespace Defuser_Imitation.Components
 
         private static Dictionary<string, string> arguments = new Dictionary<string, string>();
 
-        public static bool canUpdate;
+        public static readonly string CurrentVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.1.0.0";
+        public static string? LastestGitHubVersion;
+        public static bool CanUpdate;
         public GitHubUpdater()
         {
-            lastestGitHubVersion = currentVersion;
+            LastestGitHubVersion = CurrentVersion;
             
         }
         public static void LoadCommandLineArgs()
@@ -77,11 +77,27 @@ namespace Defuser_Imitation.Components
         {
             try
             {
-                Dns.GetHostEntry("ya.ru");
-                return true;
+                ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+                if (internetConnectionProfile != null)
+                {
+                    if(internetConnectionProfile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
             }
-            catch
-            {
+            catch (Exception exception)
+            {  
+                LoggerSerivce.Write(exception);
+                MessageBox.Show(exception.ToString(), "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
@@ -89,25 +105,25 @@ namespace Defuser_Imitation.Components
         {
             try
             {
-                canUpdate = false;
+                CanUpdate = false;
                 if (CheckInternetConnection() == false)
                 {
                     return;
                 }
                 GitHubClient GitClient = new GitHubClient(new ProductHeaderValue("Defuser_Imitation"));
-                var lastestRelease = await GitClient.Repository.Release.GetLatest(repoOwner, repoName);
-                lastestGitHubVersion = lastestRelease.TagName;
-                int compareVesionResult = currentVersion.CompareTo(lastestGitHubVersion);
+                var lastestRelease = await GitClient.Repository.Release.GetLatest(repositoryOwner, repositoryName);
+                LastestGitHubVersion = lastestRelease.TagName;
+                int compareVesionResult = CurrentVersion.CompareTo(LastestGitHubVersion);
                 if (compareVesionResult < 0)
                 {
                     updateFileName = Assembly.GetExecutingAssembly().GetName().Name + "-" + lastestRelease.TagName + ".zip";
                     updateFileUrl = lastestRelease.Assets.First(x => x.Name == updateFileName).BrowserDownloadUrl;
-                    canUpdate = true;
+                    CanUpdate = true;
                 }
             }
             catch (Exception exception)
             {
-                canUpdate = false;
+                CanUpdate = false;
                 LoggerSerivce.Write(exception);
             }
         }
@@ -115,12 +131,12 @@ namespace Defuser_Imitation.Components
         {
             try
             {
-                if(canUpdate == false)
+                if(CanUpdate == false)
                 {
                     return;
                 }
                 string arguments = string.Join(" ",
-                $"--canUpdate {canUpdate}",
+                $"--canUpdate {CanUpdate}",
                 $"--appExecutableFileName \"{appExecutableFileName}\"",
                 $"--updateFileUrl \"{updateFileUrl}\"",
                 $"--updateFileName \"{updateFileName}\"",

@@ -1,8 +1,5 @@
 ﻿using Defuser_Imitation.Pages;
 using Defuser_Imitation.Properties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
 using System.Windows;
@@ -13,6 +10,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Timer = System.Timers.Timer;
 
 namespace Defuser_Imitation.Components.UserControls
 {
@@ -21,71 +19,92 @@ namespace Defuser_Imitation.Components.UserControls
     /// </summary>
     public partial class DefuseDeviceControl : UserControl
     {
-        private Grid PlayPageGrid;
-        private DispatcherTimer DefuseTimer = new();
-        private System.Timers.Timer UsbCheckTimer = new();
+        private Grid _playPageGrid;
+        private DispatcherTimer deactivationPhaseTimer = new DispatcherTimer();
+        private Timer usbCheckTimer = new Timer();
 
-        private int DefuseCountdown = Settings.Default.DefuseCountdown;
-        private string DefuseCode = MiscUtilities.DeviceCode();
-        private int ManualDigitCount = Settings.Default.ManualInputDigitsCount;
-        private int UseUSBDevice = Settings.Default.UseUSBDevice;
-        private string USBDeviceName = Settings.Default.USBDeviceName;
+        private int deactivationPhaseCountdown = Settings.Default.DeactivationPhaseCountdown;
+        private string defuseCode = MiscUtilities.DeviceCode();
+        private int manualDigitCount = Settings.Default.ManualInputDigitsCount;
+        private int useUSBDevice = Settings.Default.UseUSBDevice;
+        private string usbDeviceName = Settings.Default.USBDeviceName;
 
-        private int DigitBlockIndex = 0;
-        private bool PauseActive = false;
+        private string inputedCode = string.Empty;
+        private int digitBlockIndex = 0;
+        private int[] _manualDigitBoxIndexArray;
+        private bool pauseActive = false;
 
-        private int[] ManualDigitBoxIndexArray = new int[Settings.Default.ManualInputDigitsCount];
-        private List<int> IndicatorActiveBlockList = new();
-        private List<int> IndicatorDeactiveBlockList = new();
+        private List<int> indicatorActiveBlockList = new();
+        private List<int> indicatorDeactiveBlockList = new();
 
-        private SinDrawGeometry SignalWaveOriginal = new();
-        private SinDrawGeometry SignalWaveDevice = new();
+        private SinDrawGeometry signalWaveOriginal = new();
+        private SinDrawGeometry signalWaveDevice = new();
 
-        public DefuseDeviceControl(Grid playPageGrid)
+        public DefuseDeviceControl(Grid playPageGrid, int[] manualDigitBoxIndexArray)
         {
             InitializeComponent();
-            PlayPageGrid = playPageGrid;
-            ((Page)PlayPageGrid.Parent).KeyDown += PlayPage_KeyDown;
+            _manualDigitBoxIndexArray = manualDigitBoxIndexArray;
+            _playPageGrid = playPageGrid;
+            ((Page)playPageGrid.Parent).KeyDown += PlayPage_KeyDown;
 
-            MiscUtilities.soundPlayers["active_device_sound"].Volume = Properties.Settings.Default.RoundVolume / 100f;
-            MiscUtilities.soundPlayers["active_device_last_seconds_sound"].Volume = Properties.Settings.Default.RoundVolume / 100f;
-            MiscUtilities.soundPlayers["active_device_sound"].MediaEnded += ActiveDeviceSoundPlayer_MediaEnded;
-            MiscUtilities.soundPlayers["active_device_sound"].Play();
+            MiscUtilities.soundPlayers["defuse_stage_sound"].MediaEnded += ActiveDeviceSoundPlayer_MediaEnded;
 
             DrawIndicatorElements();
             DisplayDeviceCodeBlock();
 
-            DefuseTimer.Tick += DefuseTimer_Tick;
-            DefuseTimer.Interval = TimeSpan.FromSeconds(1);
-            DefuseTimer.Start();
-
-            TbCountdown.Text = DefuseCountdown.ToString();
-
-            if (UseUSBDevice == 1)
+            deactivationPhaseTimer.Tick += deactivationPhaseTimer_Tick;
+            deactivationPhaseTimer.Interval = TimeSpan.FromSeconds(1);
+            TbCountdown.Text = deactivationPhaseCountdown.ToString();   
+        }
+        private void DefuseDeviceControl_Loaded(object sender, RoutedEventArgs e)
+        {  
+            SetOriginalSignal();
+            SetDeviceSignal();
+            FocusFirstDigitBlock();
+            deactivationPhaseTimer.Start();
+            if (useUSBDevice == 1)
             {
-                UsbCheckTimer.Interval = 300;
-                UsbCheckTimer.Elapsed += UsbCheckTimer_Elapsed;
-                UsbCheckTimer.Enabled = true;
+                usbCheckTimer.Interval = 300;
+                usbCheckTimer.Elapsed += USBCheckTimer_Elapsed;
+                usbCheckTimer.Enabled = true;
             }
+            MiscUtilities.soundPlayers["defuse_stage_sound"].Play();
         }
         private void ActiveDeviceSoundPlayer_MediaEnded(object sender, EventArgs e)
         {
-            if (DefuseCountdown > 15)
+            if (deactivationPhaseCountdown > 15)
             {
-                MiscUtilities.soundPlayers["active_device_sound"].Play();
+                MiscUtilities.soundPlayers["defuse_stage_sound"].Position = TimeSpan.FromSeconds(0);
+            }
+            else
+            {
+                if (MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
+                {
+                    MiscUtilities.soundPlayers["defuse_stage_sound"].Position = TimeSpan.FromSeconds(0);
+                }
+                else
+                {
+                    MiscUtilities.soundPlayers["defuse_stage_sound"].Position = MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(deactivationPhaseCountdown);
+                }
             }
         }
-        private void DefuseTimer_Tick(object sender, EventArgs e)
+        private void deactivationPhaseTimer_Tick(object sender, EventArgs e)
         {
-            if (DefuseCountdown == 15)
+            if (deactivationPhaseCountdown == 15 && MiscUtilities.soundPlayers["defuse_stage_sound"].Position < MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration - TimeSpan.FromSeconds(15))
             {
-                MiscUtilities.soundPlayers["active_device_sound"].Stop();
-                MiscUtilities.soundPlayers["active_device_last_seconds_sound"].Play();
+                if (MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
+                {
+                    MiscUtilities.soundPlayers["defuse_stage_sound"].Position = TimeSpan.FromSeconds(0);
+                }
+                else
+                {
+                    MiscUtilities.soundPlayers["defuse_stage_sound"].Position = MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(deactivationPhaseCountdown);
+                }
             }
-            if (DefuseCountdown != 1)
+            if (deactivationPhaseCountdown != 1)
             {
-                DefuseCountdown--;
-                TbCountdown.Text = DefuseCountdown.ToString();
+                deactivationPhaseCountdown--;
+                TbCountdown.Text = deactivationPhaseCountdown.ToString();
             }
             else
             {
@@ -93,91 +112,173 @@ namespace Defuser_Imitation.Components.UserControls
                 FinishRound(1);
             }
         }
-        private void UsbCheckTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void USBCheckTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (MiscUtilities.CheckUSBDevice(USBDeviceName) == true)
+            if (MiscUtilities.CheckUSBDevice(usbDeviceName) == true)
             {
-                UsbCheckTimer.Stop();
+                usbCheckTimer.Stop();
                 Application.Current.Dispatcher.Invoke(() => FinishRound(3));
             }
         }
+
         private void DrawIndicatorElements()
         {
             IndicatorGrid.Children.Clear();
-            int CurrentRowIndex = 0;
-            int CurrentColumnIndex = 0;
+            int currentRowIndex = 0;
+            int currentColumnIndex = 0;
             for (int i = 0; i < 27; i++)
             {
-                Rectangle IndicatorBlock = new Rectangle();
-                IndicatorBlock.Fill = new SolidColorBrush(Color.FromRgb(16, 49, 62));
-                IndicatorBlock.Focusable = false;
-                IndicatorBlock.Margin = new Thickness(4, 4, 4, 4);
+                Rectangle indicatorBlock = new Rectangle();
+                indicatorBlock.Fill = new SolidColorBrush(Color.FromRgb(16, 49, 62));
+                indicatorBlock.Focusable = false;
+                indicatorBlock.Margin = new Thickness(4, 4, 4, 4);
                 if (i < 9)
                 {
-                    CurrentRowIndex = 0;
+                    currentRowIndex = 0;
                 }
                 else if (i >= 9 && i < 18)
                 {
-                    CurrentRowIndex = 1;
+                    currentRowIndex = 1;
                 }
                 else if (i >= 18 && i < 27)
                 {
-                    CurrentRowIndex = 2;
+                    currentRowIndex = 2;
                 }
-                Grid.SetRow(IndicatorBlock, CurrentRowIndex);
-                Grid.SetColumn(IndicatorBlock, CurrentColumnIndex);
-                IndicatorGrid.Children.Add(IndicatorBlock);
-                IndicatorDeactiveBlockList.Add(i);
+                Grid.SetRow(indicatorBlock, currentRowIndex);
+                Grid.SetColumn(indicatorBlock, currentColumnIndex);
+                IndicatorGrid.Children.Add(indicatorBlock);
+                indicatorDeactiveBlockList.Add(i);
 
-                CurrentColumnIndex++;
-                if (CurrentColumnIndex == 9)
+                currentColumnIndex++;
+                if (currentColumnIndex == 9)
                 {
-                    CurrentColumnIndex = 0;
+                    currentColumnIndex = 0;
                 }
             }
-            ShuffleArrayClass.Shuffle(IndicatorDeactiveBlockList);
-            for (int indicatorIndex = 0; indicatorIndex < DefuseCode.Length - ManualDigitCount; indicatorIndex++)
+            ShuffleArrayClass.Shuffle(indicatorDeactiveBlockList);
+            for (int indicatorIndex = 0; indicatorIndex < defuseCode.Length - manualDigitCount; indicatorIndex++)
             {
                 ActivateIndicators();
             }
         }
+        private void ActivateIndicators()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var indicatorDeactiveListElement = indicatorDeactiveBlockList[0];
+                Rectangle gridChild = (Rectangle)IndicatorGrid.Children[indicatorDeactiveListElement];
+                gridChild.Fill.BeginAnimation(SolidColorBrush.ColorProperty, new ColorAnimation()
+                {
+                    To = Color.FromRgb(1, 255, 229),
+                    Duration = TimeSpan.FromSeconds(0.3),
+                    BeginTime = TimeSpan.FromSeconds(i * 0.1)
+                });
+                indicatorActiveBlockList.Add(indicatorDeactiveListElement);
+                indicatorDeactiveBlockList.Remove(indicatorDeactiveListElement);
+            }
+        }
+        private void DeactivateIndicators()
+        {
+            if (indicatorActiveBlockList.Count > 0)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    var indicatorActiveListElement = indicatorActiveBlockList[0];
+                    Rectangle indicatorCell = (Rectangle)IndicatorGrid.Children[indicatorActiveListElement];
+                    indicatorCell.Fill.BeginAnimation(SolidColorBrush.ColorProperty, new ColorAnimation()
+                    {
+                        To = Color.FromRgb(16, 49, 62),
+                        Duration = TimeSpan.FromSeconds(0.3),
+                        BeginTime = TimeSpan.FromSeconds(i * 0.1)
+                    });
+                    indicatorDeactiveBlockList.Add(indicatorActiveListElement);
+                    indicatorActiveBlockList.Remove(indicatorActiveListElement);
+                }
+            }
+        }
         private void DisplayDeviceCodeBlock()
         {
-            int[] DigitArray = new int[8] { 0, 1, 2, 3, 4, 5, 6, 7 };
-            ShuffleArrayClass.Shuffle(DigitArray);
-            Array.Resize(ref DigitArray, ManualDigitCount);
-
-            char[] CodeCharArray = DefuseCode.ToCharArray();
-            int CurrentChildIndex = 0;
-            int CurrentCodeCharIndex = 0;
-
-            int ManualDigitBoxIndex = 0;
-            foreach (var child in StDeviceCode.Children)
+            char[] defuseCodeCharArray = defuseCode.ToCharArray();
+            int currentDigitBlockIndex = 0;
+            foreach (UIElement child in StDeviceCode.Children)
             {
-                if (CurrentChildIndex == 3 || CurrentChildIndex == 7)
+                if (child is TextBlock)
                 {
-                    CurrentChildIndex++;
                     continue;
                 }
-
-                TextBox DigitBox = (TextBox)child;
-                if (DigitArray.Contains(CurrentCodeCharIndex))
+                else if (child is TextBox)
                 {
-                    DigitBox.IsEnabled = true;
-                    DigitBox.TextChanged += DigitBox_TextChanged;
-                    DigitBox.PreviewKeyDown += DigitBox_PreviewKeyDown;
-                    DigitBox.PreviewTextInput += DigitBox_PreviewTextInput;
-                    ManualDigitBoxIndexArray[ManualDigitBoxIndex] = CurrentChildIndex;
-                    ManualDigitBoxIndex++;
-                    CurrentCodeCharIndex++;
-                    CurrentChildIndex++;
-                    continue;
+                    TextBox digitBlock = (TextBox)child;
+                    if (_manualDigitBoxIndexArray.Contains(currentDigitBlockIndex))
+                    {
+                        digitBlock.IsEnabled = true;
+                        digitBlock.TextChanged += DigitBox_TextChanged;
+                        digitBlock.PreviewKeyDown += DigitBox_PreviewKeyDown;
+                        digitBlock.PreviewTextInput += DigitBox_PreviewTextInput;
+                        digitBlock.GotFocus += DigitBlock_GotFocus;
+                        currentDigitBlockIndex++;
+                        continue;
+                    }
+                    digitBlock.Text = defuseCodeCharArray[currentDigitBlockIndex].ToString();
+                    digitBlock.IsEnabled = false;
+                    currentDigitBlockIndex++;
                 }
-                DigitBox.Text = CodeCharArray[CurrentCodeCharIndex].ToString();
-                DigitBox.IsEnabled = false;
-                CurrentCodeCharIndex++;
-                CurrentChildIndex++;
             } 
+        }
+        private void FocusFirstDigitBlock()
+        {
+            foreach (UIElement child in StDeviceCode.Children)
+            {
+                if (child is TextBox)
+                {
+                    TextBox digitBlock = (TextBox)child;
+                    if (digitBlock.IsEnabled == true)
+                    {
+                        digitBlock.Focus();
+                        break;
+                    }
+                }
+            }
+        }
+        private void FocusNextDigitBlock(UIElement currentDigitBlock)
+        {
+            int elementIndex = StDeviceCode.Children.IndexOf(currentDigitBlock);
+            for (int i = elementIndex + 1; i < StDeviceCode.Children.Count; i++)
+            {
+                UIElement iterationChild = StDeviceCode.Children[i];
+                if (iterationChild is not TextBox)
+                {
+                    continue;
+                }
+                TextBox digitBlock = (TextBox)iterationChild;
+                if (digitBlock.IsEnabled == true)
+                {
+                    digitBlock.Focus();
+                    break;
+                }
+            }
+        }
+        private void FocusPreviousDigitBlock(UIElement currentDigitBlock)
+        {
+            int elementIndex = StDeviceCode.Children.IndexOf(currentDigitBlock);
+            for (int i = elementIndex - 1; i > -1; i--)
+            {
+                UIElement iterationChild = StDeviceCode.Children[i];
+                if (iterationChild is not TextBox)
+                {
+                    continue;
+                }
+                TextBox digitBlock = (TextBox)iterationChild;
+                if (digitBlock.IsEnabled == true)
+                {
+                    digitBlock.Focus();
+                    break;
+                }
+            }
+        }
+        private void DigitBlock_GotFocus(object sender, RoutedEventArgs e)
+        {
+            digitBlockIndex = StDeviceCode.Children.IndexOf((TextBox)sender);
         }
         private void DigitBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -194,254 +295,98 @@ namespace Defuser_Imitation.Components.UserControls
             }
             if (e.Key == Key.Back || e.Key == Key.Delete)
             {
-                SolidColorBrush LocalColorResource = (SolidColorBrush)TryFindResource("LocalColor");
-                LocalColorResource.Color = Color.FromRgb(60, 152, 149);
-                UIElement CodeBox = (UIElement)sender;
-                if (((TextBox)CodeBox).Text.Length == 0)
+                SolidColorBrush localColorResource = (SolidColorBrush)TryFindResource("LocalColor");
+                localColorResource.Color = MiscUtilities.defaultColor;
+                if (string.IsNullOrWhiteSpace(((TextBox)sender).Text))
                 {
-                    int ElementIndex = StDeviceCode.Children.IndexOf(CodeBox);
-                    for (int i = ElementIndex - 1; i > -1; i--)
-                    {
-                        CodeBox = StDeviceCode.Children[i];
-                        if (CodeBox is TextBox && CodeBox.IsEnabled == true)
-                        {
-                            CodeBox.Focus();
-                            break;
-                        }
-                    }
+                    FocusPreviousDigitBlock((UIElement)sender);
                 }
-                int DefuseCodeSumm = 0;
-                string InputedCode = "";
-                foreach (UIElement CodeBlockChild in StDeviceCode.Children)
-                {
-                    if (CodeBlockChild is TextBox)
-                    {
-                        InputedCode += ((TextBox)CodeBlockChild).Text;
-                    }
-                }
-                for (int i = 0; i < InputedCode.Length; i++)
-                {
-                    DefuseCodeSumm += int.Parse(InputedCode[i].ToString());
-                }
-                SignalWaveDevice.Scale = DefuseCodeSumm + 100;
-                SignalWaveDevice.Multiplier = DefuseCodeSumm / DefuseCode.Length;
-                PathDeviceSignal.Data = SignalWaveDevice.Sinusoid;
-
             }
         }
         private void DigitBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            UIElement CodeBox = (UIElement)sender;
-            if(((TextBox)CodeBox).Text.Length == 0)
+            inputedCode = MiscUtilities.SetDeviceCode(StDeviceCode);
+            SetDeviceSignal();
+            TextBox digitBlock = (TextBox)sender;
+            if (string.IsNullOrWhiteSpace(digitBlock.Text))
             {
                 DeactivateIndicators();
             }
-
-            if (((TextBox)CodeBox).Text.Length > 0)
+            else
             {
-                int DefuseCodeSumm = 0;
-                string InputedCode = "";
-
-                foreach (UIElement CodeBlockChild in StDeviceCode.Children)
-                {
-                    if (CodeBlockChild is TextBox)
-                    {
-                        InputedCode += ((TextBox)CodeBlockChild).Text;
-                    }
-                }
-
-                for (int i = 0; i < InputedCode.Length; i++)
-                {
-                    DefuseCodeSumm += int.Parse(InputedCode[i].ToString());
-                }
-                SignalWaveDevice.Scale = DefuseCodeSumm + 100;
-                SignalWaveDevice.Multiplier = DefuseCodeSumm / DefuseCode.Length;
-                PathDeviceSignal.Data = SignalWaveDevice.Sinusoid;
-
                 ActivateIndicators();
-                
-                if (InputedCode.Length == 8)
+                if (inputedCode.Length == 8)
                 {
-                    if (InputedCode == DefuseCode)
+                    if (inputedCode == defuseCode)
                     {
                         ActivateIndicators();
                         FinishRound(3);
                         return;
                     }
-                    else
-                    {
-                        SolidColorBrush LocalColorResource = (SolidColorBrush)TryFindResource("LocalColor");
-                        LocalColorResource.Color = Color.FromRgb(191, 25, 25);
-                    }
+                    SolidColorBrush LocalColorResource = (SolidColorBrush)TryFindResource("LocalColor");
+                    LocalColorResource.Color = MiscUtilities.redColor;
+                    return;
                 }
-                int ElementIndex = StDeviceCode.Children.IndexOf(CodeBox);
-                if (ElementIndex < 11)
-                {
-                    for (int i = ElementIndex + 1; i < StDeviceCode.Children.Count; i++)
-                    {
-                        CodeBox = StDeviceCode.Children[i];
-                        if (CodeBox is TextBox && CodeBox.IsEnabled == true)
-                        {
-                            CodeBox.Focus();
-                            break;
-                        }
-                    }
-                }
+                FocusNextDigitBlock(digitBlock);
             }
         }
-        private void ActivateIndicators()
+        private void SetOriginalSignal()
         {
-            for (int i = 0; i < 3; i++)
-            {
-                var IndicatorDeactiveListElement = IndicatorDeactiveBlockList[0];
-                Rectangle GridChild = (Rectangle)IndicatorGrid.Children[IndicatorDeactiveListElement];
-                GridChild.Fill.BeginAnimation(SolidColorBrush.ColorProperty, new ColorAnimation()
-                {
-                    To = Color.FromRgb(1, 255, 229),
-                    Duration = TimeSpan.FromSeconds(0.3),
-                    BeginTime = TimeSpan.FromSeconds(i * 0.1)
-                });
-                IndicatorActiveBlockList.Add(IndicatorDeactiveListElement);
-                IndicatorDeactiveBlockList.Remove(IndicatorDeactiveListElement);
-            }
-        }
-        private void DeactivateIndicators()
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                var IndicatorActiveListElement = IndicatorActiveBlockList[0];
-                Rectangle IndicatorCell = (Rectangle)IndicatorGrid.Children[IndicatorActiveListElement];
-                IndicatorCell.Fill.BeginAnimation(SolidColorBrush.ColorProperty, new ColorAnimation()
-                {
-                    To = Color.FromRgb(16, 49, 62),
-                    Duration = TimeSpan.FromSeconds(0.3),
-                    BeginTime = TimeSpan.FromSeconds(i * 0.1)
-                });
-                IndicatorDeactiveBlockList.Add(IndicatorActiveListElement);
-                IndicatorActiveBlockList.Remove(IndicatorActiveListElement);
-            }
-        }
-        private void DefuseDeviceControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            SetSignalWaves();
-            SetFocusOnDigitBlock();
-            PathOriginalSignal.RenderTransform.BeginAnimation(TranslateTransform.XProperty, new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(2),
-                From = 0,
-                To = 212,
-                RepeatBehavior = RepeatBehavior.Forever
-            });
-            PathDeviceSignal.RenderTransform.BeginAnimation(TranslateTransform.XProperty, new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(2),
-                From = 0,
-                To = 212,
-                RepeatBehavior = RepeatBehavior.Forever
-            });
-        }
-        private void SetSignalWaves()
-        {
-            SignalWaveOriginal.X0 = 0;
-            SignalWaveOriginal.X1 = 20;           
-            SignalWaveOriginal.StepsCount = 400;
+            signalWaveOriginal.X0 = 0;
+            signalWaveOriginal.X1 = 20;
+            signalWaveOriginal.StepsCount = 400;
 
-            SignalWaveDevice.X0 = 0;
-            SignalWaveDevice.X1 = 20;
-            SignalWaveDevice.StepsCount = 400;
+            signalWaveDevice.X0 = 0;
+            signalWaveDevice.X1 = 20;
+            signalWaveDevice.StepsCount = 400;
 
             int SettingsDeviceCodeSumm = 0;
-            for (int i = 0; i < DefuseCode.Length; ++i)
+            for (int i = 0; i < defuseCode.Length; ++i)
             {
-                SettingsDeviceCodeSumm += int.Parse(DefuseCode[i].ToString());
+                SettingsDeviceCodeSumm += int.Parse(defuseCode[i].ToString());
             }
-            SignalWaveOriginal.Scale = SettingsDeviceCodeSumm + 100;
-            SignalWaveOriginal.Multiplier = SettingsDeviceCodeSumm / DefuseCode.Length;
-            PathOriginalSignal.Data = SignalWaveOriginal.Sinusoid;
-            SetSignalWavesAnimation();
+            signalWaveOriginal.Scale = SettingsDeviceCodeSumm + 100;
+            signalWaveOriginal.Multiplier = SettingsDeviceCodeSumm / defuseCode.Length;
+            PathOriginalSignal.Data = signalWaveOriginal.Sinusoid;
         }
-        private void SetSignalWavesAnimation()
+        private void SetDeviceSignal()
         {
-            PathOriginalSignal.RenderTransform.BeginAnimation(TranslateTransform.XProperty, new DoubleAnimation()
+            int defuseCodeSumm = 0;
+            for (int i = 0; i < inputedCode.Length; i++)
             {
-                Duration = TimeSpan.FromSeconds(2),
-                From = 0,
-                To = 212,
-                RepeatBehavior = RepeatBehavior.Forever
-            });
-            PathDeviceSignal.RenderTransform.BeginAnimation(TranslateTransform.XProperty, new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(2),
-                From = 0,
-                To = 212,
-                RepeatBehavior = RepeatBehavior.Forever
-            });
+                defuseCodeSumm += int.Parse(inputedCode[i].ToString());
+            }
+            signalWaveDevice.Scale = defuseCodeSumm + 100;
+            signalWaveDevice.Multiplier = defuseCodeSumm / defuseCode.Length;
+            PathDeviceSignal.Data = signalWaveDevice.Sinusoid;
         }
-        private void ResetSignalWavesAnimation()
-        {
-            PathOriginalSignal.RenderTransform.BeginAnimation(TranslateTransform.XProperty, null);
-            PathDeviceSignal.RenderTransform.BeginAnimation(TranslateTransform.XProperty, null);
-        }
+          
         private void FinishRound(int ResultCode)
         {
-            DefuseTimer.Stop();
-            UsbCheckTimer.Stop();
+            deactivationPhaseTimer.Stop();
+            usbCheckTimer.Stop();
             StDeviceCode.IsEnabled = false;
-            MiscUtilities.soundPlayers["active_device_sound"].Stop();
-            MiscUtilities.soundPlayers["active_device_last_seconds_sound"].Stop();
-            ResetSignalWavesAnimation();
-            var PlayPage = (PlayPage)PlayPageGrid.Parent;
-            PlayPage.KeyDown -= PlayPage_KeyDown;
+            MiscUtilities.soundPlayers["defuse_stage_sound"].Stop();
+            var playPage = (PlayPage)_playPageGrid.Parent;
+            playPage.KeyDown -= PlayPage_KeyDown;
             
-            RoundResultControl roundResultControl = new RoundResultControl(PlayPageGrid);
+            RoundResultControl roundResultControl = new RoundResultControl(_playPageGrid);
             roundResultControl.roundResultCode = ResultCode;
-
-            ContentGridBitmapBlur.BeginAnimation(BlurBitmapEffect.RadiusProperty, new DoubleAnimation()
-            {
-                From = 0,
-                To = 50,
-                Duration = TimeSpan.FromSeconds(1),
-                EasingFunction = new CircleEase { EasingMode = EasingMode.EaseOut }
-            });
             roundResultControl.BeginAnimation(OpacityProperty, new DoubleAnimation()
             {
                 From = 0,
                 To = 1,
-                BeginTime = TimeSpan.FromSeconds(1),
                 Duration = TimeSpan.FromSeconds(1)
             });
-            PlayPageGrid.Children.Add(roundResultControl);
-        }
-        private void DigitBlock_GotFocus(object sender, RoutedEventArgs e)
-        {
-            DigitBlockIndex = StDeviceCode.Children.IndexOf((TextBox)sender);
-        }
-        private void SetFocusOnDigitBlock()
-        {
-            foreach (var Child in StDeviceCode.Children)
-            {
-                if (Child is TextBox)
-                {
-                    TextBox CodeBox = (TextBox)Child;
-                    if (CodeBox.IsEnabled == true)
-                    {
-                        CodeBox.Focus();
-                        break;
-                    }
-                }
-            }
-        }
+            _playPageGrid.Children.Add(roundResultControl);
+        }   
         private void PlayPage_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
-                if (PauseActive == false)
+                if (pauseActive == false)
                 {
                     PauseRound();
-                }
-                else
-                {
-                    ContinueRound();
                 }
             }
         }
@@ -451,43 +396,36 @@ namespace Defuser_Imitation.Components.UserControls
         }
         private void RoundPauseControl_ExitToMenu(object sender, EventArgs e)
         {
-            var PlayPage = PlayPageGrid.Parent as PlayPage;
-            PlayPage.NavigationService.Navigate(new MenuPage());
+            var playPage = (PlayPage)_playPageGrid.Parent;
+            if (playPage != null)
+            {
+                playPage.NavigationService.Navigate(new MenuPage());
+            }
         }
         private void ContinueRound()
         {
-            PauseActive = false;
-            DefuseTimer.Start();
-            if (UseUSBDevice == 1)
+            pauseActive = false;
+            deactivationPhaseTimer.Start();
+            if (useUSBDevice == 1)
             {
-                UsbCheckTimer.Start();
+                usbCheckTimer.Start();
             }
             StDeviceCode.IsEnabled = true;
-            StDeviceCode.Children[DigitBlockIndex].Focus();
-            if (DefuseCountdown > 15)
-            {
-                MiscUtilities.soundPlayers["active_device_sound"].Play();
-            }
-            else
-            {
-                MiscUtilities.soundPlayers["active_device_last_seconds_sound"].Play();
-            }
-            SetSignalWavesAnimation();
+            StDeviceCode.Children[digitBlockIndex].Focus();
+            MiscUtilities.soundPlayers["defuse_stage_sound"].Play();
         }
         private void PauseRound()
         {
-            PauseActive = true;
-            ResetSignalWavesAnimation();
-            DefuseTimer.Stop();
-            UsbCheckTimer.Stop();
+            pauseActive = true;
+            deactivationPhaseTimer.Stop();
+            usbCheckTimer.Stop();
             StDeviceCode.IsEnabled = false;
-            MiscUtilities.soundPlayers["active_device_sound"].Pause();
-            MiscUtilities.soundPlayers["active_device_last_seconds_sound"].Pause();
-            RoundPauseControl roundPauseControl = new RoundPauseControl(PlayPageGrid);
+            MiscUtilities.soundPlayers["defuse_stage_sound"].Pause();
+            RoundPauseControl roundPauseControl = new RoundPauseControl(_playPageGrid);
             Panel.SetZIndex(roundPauseControl, 2);
             roundPauseControl.ContinueRound += RoundPauseControl_ContinueRound;
             roundPauseControl.ExitToMenu += RoundPauseControl_ExitToMenu;
-            PlayPageGrid.Children.Add(roundPauseControl);
+            _playPageGrid.Children.Add(roundPauseControl);
         }
     }
 }

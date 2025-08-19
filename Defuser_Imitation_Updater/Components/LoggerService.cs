@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text;
-using System.Windows;
 
 namespace Defuser_Imitation_Updater.Components
 {

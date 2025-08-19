@@ -38,48 +38,48 @@ namespace Defuser_Imitation.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
-        public int DefuseCountdown {
+        public int DeactivationPhaseCountdown {
             get {
-                return ((int)(this["DefuseCountdown"]));
+                return ((int)(this["DeactivationPhaseCountdown"]));
             }
             set {
-                this["DefuseCountdown"] = value;
+                this["DeactivationPhaseCountdown"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("120")]
-        public int RoundCountdown {
+        public int ActivationPhaseCountdown {
             get {
-                return ((int)(this["RoundCountdown"]));
+                return ((int)(this["ActivationPhaseCountdown"]));
             }
             set {
-                this["RoundCountdown"] = value;
+                this["ActivationPhaseCountdown"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int ActiveDeviceVolume {
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int DeactivationPhaseVolume {
             get {
-                return ((int)(this["ActiveDeviceVolume"]));
+                return ((int)(this["DeactivationPhaseVolume"]));
             }
             set {
-                this["ActiveDeviceVolume"] = value;
+                this["DeactivationPhaseVolume"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int RoundVolume {
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int ActivationPhaseVolume {
             get {
-                return ((int)(this["RoundVolume"]));
+                return ((int)(this["ActivationPhaseVolume"]));
             }
             set {
-                this["RoundVolume"] = value;
+                this["ActivationPhaseVolume"] = value;
             }
         }
         
@@ -140,6 +140,60 @@ namespace Defuser_Imitation.Properties {
             }
             set {
                 this["NeedToClearTemp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int PreparationPhaseCountdown {
+            get {
+                return ((int)(this["PreparationPhaseCountdown"]));
+            }
+            set {
+                this["PreparationPhaseCountdown"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int PreparationPhaseVolume {
+            get {
+                return ((int)(this["PreparationPhaseVolume"]));
+            }
+            set {
+                this["PreparationPhaseVolume"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int ComplitionPhaseVolume {
+            get {
+                return ((int)(this["ComplitionPhaseVolume"]));
+            }
+            set {
+                this["ComplitionPhaseVolume"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Defuser_Imitation")]
+        public string RepositoryName {
+            get {
+                return ((string)(this["RepositoryName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("grosfae")]
+        public string RepositoryOwner {
+            get {
+                return ((string)(this["RepositoryOwner"]));
             }
         }
     }

@@ -1,27 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace Defuser_Imitation.Components.ViewModels
 {
     public class GuideChapterViewModel : ViewModelBase
     {
-        private ObservableCollection<GuideChapter> _guideChapters;
-        private GuideChapter _selectedGuideChapter {  get; set; }
+        private ObservableCollection<GuideChapter> guideChapters;
+        private GuideChapter selectedGuideChapter {  get; set; }
         public ObservableCollection<GuideChapter> GuideChapters
         {
             get
             {
-                return _guideChapters;
+                return guideChapters;
             }
             set
             {
-                _guideChapters = value;
+                guideChapters = value;
                 OnPropertyChanged(nameof(GuideChapters));
             }
         }
@@ -29,11 +23,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return _selectedGuideChapter;
+                return selectedGuideChapter;
             }
             set
             {
-                _selectedGuideChapter = value;
+                selectedGuideChapter = value;
                 OnPropertyChanged(nameof(SelectedGuideChapter));
             }
         }
@@ -73,9 +67,10 @@ namespace Defuser_Imitation.Components.ViewModels
                     },
                 };
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show($"{ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                LoggerSerivce.Write(exception);
+                MessageBox.Show($"{exception.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

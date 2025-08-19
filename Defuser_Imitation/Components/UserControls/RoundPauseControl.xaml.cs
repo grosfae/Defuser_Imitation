@@ -1,19 +1,5 @@
-﻿using Defuser_Imitation.Components.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Defuser_Imitation.Components.UserControls
 {
@@ -22,8 +8,8 @@ namespace Defuser_Imitation.Components.UserControls
     /// </summary>
     public partial class RoundPauseControl : UserControl
     {
-        public event EventHandler? ContinueRound;
-        public event EventHandler? ExitToMenu;
+        public event EventHandler ContinueRound;
+        public event EventHandler ExitToMenu;
         protected virtual void OnContinueRound()
         {
             ContinueRound?.Invoke(this, EventArgs.Empty);
@@ -32,17 +18,17 @@ namespace Defuser_Imitation.Components.UserControls
         {
             ExitToMenu?.Invoke(this, EventArgs.Empty);
         }
-        private Grid PlayPageGrid;
+        private Grid _playPageGrid;
         public RoundPauseControl(Grid playPageGrid)
         {
             InitializeComponent();
-            PlayPageGrid = playPageGrid;
+            _playPageGrid = playPageGrid;
         }
         private void SelfDispose()
         {
-            if (PlayPageGrid != null && PlayPageGrid.Children.Contains(this))
+            if (_playPageGrid != null && _playPageGrid.Children.Contains(this))
             {
-                PlayPageGrid.Children.Remove(this);
+                _playPageGrid.Children.Remove(this);
             }
         }
 

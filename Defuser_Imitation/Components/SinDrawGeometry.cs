@@ -1,43 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using System.Windows;
 
 namespace Defuser_Imitation.Components
 {
     public class SinDrawGeometry
     {
-        private double _x0;
-        private double _x1;
-        private double _scale;
-        private uint _stepsCount;
-        private double _multiplier;
+        private double x0;
+        private double x1;
+        private double scale;
+        private uint stepsCount;
+        private double multiplier;
 
         public PathGeometry Sinusoid { get; private set; }
 
-        public double X0 { get => _x0; set { _x0 = value; Refresh(); } }
-        public double X1 { get => _x1; set { _x1 = value; Refresh(); } }
-        public double Scale { get => _scale; set { _scale = value; Refresh(); } }
-        public uint StepsCount { get => _stepsCount; set { _stepsCount = value; Refresh(); } }
-        public double Multiplier { get => _multiplier; set { _multiplier = value; Refresh(); } }
+        public double X0 { get => x0; set { x0 = value; Refresh(); } }
+        public double X1 { get => x1; set { x1 = value; Refresh(); } }
+        public double Scale { get => scale; set { scale = value; Refresh(); } }
+        public uint StepsCount { get => stepsCount; set { stepsCount = value; Refresh(); } }
+        public double Multiplier { get => multiplier; set { multiplier = value; Refresh(); } }
         private void Refresh()
         {
             uint stepsCount = StepsCount;
             if (stepsCount == 0)
+            {
                 stepsCount = 1;
+            }
             double scale = Scale;
             if (scale <= 0)
+            {
                 scale = 1;
+            }
             double multiplier = Multiplier;
             if (multiplier <= 0)
+            {
                 multiplier = 1;
+            }
             (double x0, double x1) = (X0, X1);
             if (x0 > x1)
+            {
                 (x0, x1) = (x1, x0);
-
+            }
             double step = (x1 - x0) / stepsCount;
 
             PathGeometry geometry = new PathGeometry();

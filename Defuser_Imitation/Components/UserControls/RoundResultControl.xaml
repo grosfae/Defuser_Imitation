@@ -11,6 +11,9 @@
         <SolidColorBrush x:Key="FirstOrbitColor" Color="#FF191919"/>
         <SolidColorBrush x:Key="SecondOrbitColor" Color="#FF191919"/>
     </UserControl.Resources>
+    <UserControl.Background>
+        <SolidColorBrush Color="#FF121212" Opacity="0.6"/>
+    </UserControl.Background>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1000"/>

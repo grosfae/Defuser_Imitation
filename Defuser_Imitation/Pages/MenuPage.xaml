@@ -7,19 +7,6 @@
       mc:Ignorable="d"
       d:DesignHeight="1080" d:DesignWidth="1920"
       Title="MenuPage">
-    <Page.Resources>
-        <Storyboard x:Key="AnimateMask">
-            <DoubleAnimation
-                Storyboard.TargetName="gs1"
-                Storyboard.TargetProperty="Offset"
-                From="0.99" To="-2" Duration="0:0:4"
-                RepeatBehavior="Forever" AutoReverse="True">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseInOut"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
-    </Page.Resources>
     <Page.Background>
         <ImageBrush ImageSource="/Resources/menu_background.jpg" Stretch="UniformToFill"/>
     </Page.Background>
@@ -30,19 +17,6 @@
             </TextBlock.Foreground>
         </TextBlock>
         <Canvas Name="MapCanvas"/>
-            <Image Source="/Resources/background_grid.png" Stretch="Uniform">
-            <Image.OpacityMask>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                    <GradientStop Color="Transparent" Offset="1.1"/>
-                    <GradientStop x:Name="gs1" Color="Black" Offset="0.99"/>
-                </LinearGradientBrush>
-            </Image.OpacityMask>
-            <Image.Triggers>
-                <EventTrigger RoutedEvent="Image.Loaded">
-                    <BeginStoryboard Storyboard="{StaticResource AnimateMask}"/>
-                </EventTrigger>
-            </Image.Triggers>
-        </Image>
         <Viewbox>
             <Grid>
                 <Grid.ColumnDefinitions>

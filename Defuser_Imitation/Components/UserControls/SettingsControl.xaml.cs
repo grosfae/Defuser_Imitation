@@ -13,7 +13,7 @@ namespace Defuser_Imitation.Components.UserControls
     /// </summary>
     public partial class SettingsControl : UserControl
     {
-        OptionViewModel optionViewModel = new OptionViewModel();
+        private OptionViewModel optionViewModel = new OptionViewModel();
         private bool isClosed = false;
         public SettingsControl()
         {
@@ -21,7 +21,6 @@ namespace Defuser_Imitation.Components.UserControls
             DataContext = optionViewModel;
             optionViewModel.SettingsChangedEvent += OptionViewModel_SettingsChangedEvent;
         }
-        
         private void SelfDispose()
         {
             DoubleAnimation doubleAnimation = new DoubleAnimation()
@@ -67,28 +66,6 @@ namespace Defuser_Imitation.Components.UserControls
                 }
             }
         }
-        private void SaveSettings()
-        {
-            Settings.Default.DefuseCountdown = optionViewModel.DefuseCountdown;
-            Settings.Default.RoundCountdown = optionViewModel.RoundCountdown;
-            Settings.Default.ActiveDeviceVolume = optionViewModel.ActiveDeviceVolume;
-            Settings.Default.RoundVolume = optionViewModel.RoundVolume;
-            Settings.Default.DeviceTypeCode = optionViewModel.DeviceTypeCode;
-            Settings.Default.ManualInputDigitsCount = optionViewModel.ManualInputDigitsCount;
-            Settings.Default.UseUSBDevice = optionViewModel.UseUSBDevice;
-            if(optionViewModel.DeviceCode.Length < 8)
-            {
-                int CodeLength = optionViewModel.DeviceCode.Length;
-                for (int i = 0; i < 8 - CodeLength; i++)
-                {
-                    optionViewModel.DeviceCode += 0;
-                }
-                
-            }
-            Settings.Default.DeviceCode = optionViewModel.DeviceCode;
-            Settings.Default.USBDeviceName = optionViewModel.USBDeviceName;
-            Settings.Default.Save();
-        }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -103,60 +80,80 @@ namespace Defuser_Imitation.Components.UserControls
                 CloseSettings();
             }
         }
-        private void SettingBlock_MouseEnter(object sender, MouseEventArgs e)
+        private void SetSettingInformation(UIElement settingBlock)
         {
-            Grid SettingBlock = sender as Grid;
-            if (SettingBlock == BlockTypeCode)
+            if (settingBlock == BlockTypeCode)
             {
                 TbSettingHeader.Text = "ТИП КОДА";
                 TbSettingDescription.Text = "Установка типа кода устройства в зависимости от желаемого режима.\n" +
                     "Код устройства используется для его активации/деактивации.\n" +
-                    "Случайный код: код устройства генерируется случайно.\n" +
-                    "Свой код: пользователь вводит собственный код.";
+                    "Случайный код: код устройства генерируется случайно при каждом новом запуске раунда.\n" +
+                    "Свой код: пользователь устанавливает собственный код.";
             }
-            if (SettingBlock == BlockDeviceCode)
+            else if (settingBlock == BlockDeviceCode)
             {
                 TbSettingHeader.Text = "КОД УСТРОЙСТВА";
-                TbSettingDescription.Text = "Установка собственного кода устройства. Код устройства используется для его активации/деактивации.";
+                TbSettingDescription.Text = "Установка собственного кода устройства. Код устройства используется для его активации/деактивации. \n" +
+                    "Для применения введённого кода необходимо нажать клавишу Enter.";
             }
-            if (SettingBlock == BlockManualDigit)
+            else if(settingBlock == BlockManualDigit)
             {
                 TbSettingHeader.Text = "СИМВОЛЫ РУЧНОГО ВВОДА";
-                TbSettingDescription.Text = "Установка количества вводимых в ручную элементов кода устройства. Остальные элементы будут кода устройства будут уже введены.";
+                TbSettingDescription.Text = "Установка количества вводимых вручную элементов кода устройства на этапах активации и деацтивации. Остальные элементы будут кода устройства будут введены автоматически.";
             }
-            if (SettingBlock == BlockDeviceTimer)
+            else if (settingBlock == BlockActivationPhase)
             {
-                TbSettingHeader.Text = "ТАЙМЕР УСТРОЙСТВА";
-                TbSettingDescription.Text = "Установка таймера обратного отсчета в секундах для активированного устройства.";
+                TbSettingHeader.Text = "ВРЕМЯ ЭТАПА АКТИВАЦИИ";
+                TbSettingDescription.Text = "Установка таймера обратного отсчета в секундах для этапа активации.";
             }
-            if (SettingBlock == BlockRoundTimer)
+            else if(settingBlock == BlockDeactivationPhase)
             {
-                TbSettingHeader.Text = "ТАЙМЕР РАУНДА";
-                TbSettingDescription.Text = "Установка таймера обратного отсчета в секундах для раунда.";
+                TbSettingHeader.Text = "ВРЕМЯ ЭТАПА ДЕАКТИВАЦИИ";
+                TbSettingDescription.Text = "Установка таймера обратного отсчета в секундах для этапа деактивации.";
             }
-            if (SettingBlock == BlockDeviceVolume)
+            else if (settingBlock == BlockPreparationPhase)
             {
-                TbSettingHeader.Text = "ГРОМКОСТЬ АКТИВИРОВАННОГО УСТРОЙСТВА";
-                TbSettingDescription.Text = "Установка громкости таймера обратного отсчета активированного устройства.";
+                TbSettingHeader.Text = "ВРЕМЯ ПОДГОТОВИТЕЛЬНОЙ ФАЗЫ";
+                TbSettingDescription.Text = "Установка таймера обратного отсчета в секундах для подготовительной фазы перед началом игры.";
             }
-            if (SettingBlock == BlockRoundVolume)
+            else if (settingBlock == BlockActivationPhaseVolume)
             {
-                TbSettingHeader.Text = "ГРОМКОСТЬ ТАЙМЕРА РАУНДА";
-                TbSettingDescription.Text = "Установка громкости таймера обратного отсчета раунда.";
+                TbSettingHeader.Text = "ГРОМКОСТЬ ЗВУКОВ ЭТАПА АКТИВАЦИИ";
+                TbSettingDescription.Text = "Установка громкости этапа еактивации.";
             }
-            if (SettingBlock == BlockUSBDevice)
+            else if(settingBlock == BlockDeactivationPhaseVolume)
+            {
+                TbSettingHeader.Text = "ГРОМКОСТЬ ЗВУКОВ ЭТАПА ДЕАКТИВАЦИИ";
+                TbSettingDescription.Text = "Установка громкости звуков этапа деактивации.";
+            }
+            else if(settingBlock == BlockPreparationPhaseVolume)
+            {
+                TbSettingHeader.Text = "ГРОМКОСТЬ ЗВУКОВ ФАЗЫ ПОДГОТОВКИ";
+                TbSettingDescription.Text = "Установка громкости звуков фазы подготовки перед началом раунда.";
+            }
+            else if(settingBlock == BlockComplitionPhaseVolume)
+            {
+                TbSettingHeader.Text = "ГРОМКОСТЬ ЗВУКОВ ИСХОДА РАУНДА";
+                TbSettingDescription.Text = "Установка громкости звуков экрана исхода раунда.";
+            }
+            else if(settingBlock == BlockUSBDevice)
             {
                 TbSettingHeader.Text = "ИСПОЛЬЗОВАТЬ УСКОРЕННУЮ ДЕАКТИВАЦИЮ";
                 TbSettingDescription.Text = "Установка параметра использования ускоренной деактивации устройства.\n" +
-                    "Ускоренная деактивация заключается в вставке физического USB-носителя в соответствующий разъем активированного устройства.\n" +
+                    "Ускоренная деактивация работает при вставке физического USB-носителя в соответствующий разъем активированного устройства.\n" +
                     "Не использовать: отключает данную функцию.\n" +
                     "Использовать: включает данную функцию.";
             }
-            if (SettingBlock == BlockUSBDeviceName)
+            else if(settingBlock == BlockUSBDeviceName)
             {
                 TbSettingHeader.Text = "НАИМЕНОВАНИЕ НОСИТЕЛЯ";
-                TbSettingDescription.Text = "Установка наименования USB-носителя для ускоренной деактивации устройства.\n";
+                TbSettingDescription.Text = "Установка наименования USB-носителя для ускоренной деактивации устройства.\n" +
+                    "Для применения введённого наименования необходимо нажать клавишу Enter.";
             }
+        }
+        private void SettingBlock_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SetSettingInformation((UIElement)sender);
         }
         private void SettingBlock_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -167,19 +164,12 @@ namespace Defuser_Imitation.Components.UserControls
         private void SettingsDefaultBtn_Click(object sender, RoutedEventArgs e)
         {
             Settings.Default.Reset();
-            DataContext = null;
-            optionViewModel = new OptionViewModel();
-            optionViewModel.SettingsChangedEvent += OptionViewModel_SettingsChangedEvent;
-            DataContext = optionViewModel;
+            optionViewModel.SaveSettings();
         }
         private void SettingsSaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            SaveSettings();
+            optionViewModel.SaveSettings();
             SettingsSaveBtn.IsEnabled = false;
-            DataContext = null;
-            optionViewModel = new OptionViewModel();
-            optionViewModel.SettingsChangedEvent += OptionViewModel_SettingsChangedEvent;
-            DataContext = optionViewModel;
         }
         private void SwchTypeCode_SelectedItemChanged(object sender, EventArgs e)
         {
@@ -195,7 +185,6 @@ namespace Defuser_Imitation.Components.UserControls
                     break;
             }
         }
-
         private void SwchFastDefuse_SelectedItemChanged(object sender, EventArgs e)
         {
             switch (SwchFastDefuse.SelectedIndex)
@@ -220,7 +209,7 @@ namespace Defuser_Imitation.Components.UserControls
         }
         private void AcceptChangesControl_AcceptChanges(object sender, EventArgs e)
         {
-            SaveSettings();
+            optionViewModel.SaveSettings();
             SettingsSaveBtn.IsEnabled = false;
             DataContext = null;
             optionViewModel = new OptionViewModel();

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
+﻿using Defuser_Imitation.Properties;
 
 namespace Defuser_Imitation.Components.ViewModels
 {
@@ -19,33 +12,24 @@ namespace Defuser_Imitation.Components.ViewModels
                 SettingsChangedEvent(this, EventArgs.Empty);
             }
         }
-        private List<string> _typeCodeList = new List<string>
+        private List<string> typeCodeList = new List<string>
         {
             "Случайный код", "Свой код"
         };
-        private List<string> _fastDefuseList = new List<string>
+        private List<string> fastDefuseList = new List<string>
         {
             "Не использовать", "Использовать"
         };
-        private bool _settingsChanged = false;
-        private int _defuseCountdown = Properties.Settings.Default.DefuseCountdown;
-        private int _roundCountdown = Properties.Settings.Default.RoundCountdown;
-        private int _activeDeviceVolume = Properties.Settings.Default.ActiveDeviceVolume;
-        private int _roundVolume = Properties.Settings.Default.RoundVolume;
-        private int _deviceTypeCode = Properties.Settings.Default.DeviceTypeCode;
-        private int _manualInputDigitsCount = Properties.Settings.Default.ManualInputDigitsCount;
-        private int _useUSBDevice = Properties.Settings.Default.UseUSBDevice;
-        private string _deviceCode = Properties.Settings.Default.DeviceCode;
-        private string _uSBDeviceName = Properties.Settings.Default.USBDeviceName;
+        private bool settingsChanged = false;
         public List<string> TypeCodeList
         {
             get
             {
-                return _typeCodeList;
+                return typeCodeList;
             }
             set
             {
-                _typeCodeList = value;
+                typeCodeList = value;
                 OnPropertyChanged(nameof(TypeCodeList));
             }
         }
@@ -53,63 +37,102 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return _fastDefuseList;
+                return fastDefuseList;
             }
             set
             {
-                _fastDefuseList = value;
+                fastDefuseList = value;
                 OnPropertyChanged(nameof(FastDefuseList));
             }
         }
-        public int DefuseCountdown
+        public int ActivationPhaseCountdown
         {
             get
             {
-                return _defuseCountdown;
+                return Settings.Default.ActivationPhaseCountdown;
             }
             set
             {
-                _defuseCountdown = value;
-                OnPropertyChanged(nameof(DefuseCountdown));
+                Settings.Default.ActivationPhaseCountdown = value;
+                OnPropertyChanged(nameof(ActivationPhaseCountdown));
                 SettingsHasBeenChanged();
             }
         }
-        public int RoundCountdown
+        public int DeactivationPhaseCountdown
         {
             get
             {
-                return _roundCountdown;
+                return Settings.Default.DeactivationPhaseCountdown;
             }
             set
             {
-                _roundCountdown = value;
-                OnPropertyChanged(nameof(RoundCountdown));
+                Settings.Default.DeactivationPhaseCountdown = value;
+                OnPropertyChanged(nameof(DeactivationPhaseCountdown));
                 SettingsHasBeenChanged();
             }
         }
-        public int ActiveDeviceVolume
+        public int PreparationPhaseCountdown
         {
             get
             {
-                return _activeDeviceVolume;
+                return Settings.Default.PreparationPhaseCountdown;
             }
             set
             {
-                _activeDeviceVolume = value;
-                OnPropertyChanged(nameof(ActiveDeviceVolume));
+                Settings.Default.PreparationPhaseCountdown = value;
+                OnPropertyChanged(nameof(PreparationPhaseCountdown));
                 SettingsHasBeenChanged();
             }
         }
-        public int RoundVolume
+        public int ActivationPhaseVolume
         {
             get
             {
-                return _roundVolume;
+                return Settings.Default.ActivationPhaseVolume;
             }
             set
             {
-                _roundVolume = value;
-                OnPropertyChanged(nameof(RoundVolume));
+                Settings.Default.ActivationPhaseVolume = value;
+                OnPropertyChanged(nameof(ActivationPhaseVolume));
+                SettingsHasBeenChanged();
+            }
+        }
+        public int DeactivationPhaseVolume
+        {
+            get
+            {
+                return Settings.Default.DeactivationPhaseVolume;
+            }
+            set
+            {
+                Settings.Default.DeactivationPhaseVolume = value;
+                OnPropertyChanged(nameof(DeactivationPhaseVolume));
+                SettingsHasBeenChanged();
+            }
+        }
+        public int PreparationPhaseVolume
+        {
+            get
+            {
+                return Settings.Default.PreparationPhaseVolume;
+            }
+            set
+            {
+                Settings.Default.PreparationPhaseVolume = value;
+                OnPropertyChanged(nameof(PreparationPhaseVolume));
+                SettingsHasBeenChanged();
+            }
+        }
+        public int ComplitionPhaseVolume
+        {
+            get
+            {
+                return Settings.Default.ComplitionPhaseVolume;
+            }
+            set
+            {
+                Settings.Default.ComplitionPhaseVolume = value;
+                OnPropertyChanged(nameof(ComplitionPhaseVolume));
                 SettingsHasBeenChanged();
             }
         }
@@ -117,11 +140,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return _deviceTypeCode;
+                return Settings.Default.DeviceTypeCode;
             }
             set
             {
-                _deviceTypeCode = value;
+                Settings.Default.DeviceTypeCode = value;
                 OnPropertyChanged(nameof(DeviceTypeCode));
                 SettingsHasBeenChanged();
             }
@@ -130,11 +153,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return _manualInputDigitsCount;
+                return Settings.Default.ManualInputDigitsCount;
             }
             set
             {
-                _manualInputDigitsCount = value;
+                Settings.Default.ManualInputDigitsCount = value;
                 OnPropertyChanged(nameof(ManualInputDigitsCount));
                 SettingsHasBeenChanged();
             }
@@ -143,11 +166,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return _useUSBDevice;
+                return Settings.Default.UseUSBDevice;
             }
             set
             {
-                _useUSBDevice = value;
+                Settings.Default.UseUSBDevice = value;
                 OnPropertyChanged(nameof(UseUSBDevice));
                 SettingsHasBeenChanged();
             }
@@ -156,11 +179,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return _deviceCode;
+                return Settings.Default.DeviceCode;
             }
             set
             {
-                _deviceCode = value;
+                Settings.Default.DeviceCode = value;
                 OnPropertyChanged(nameof(DeviceCode));
                 SettingsHasBeenChanged();
             }
@@ -169,11 +192,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return _uSBDeviceName;
+                return Settings.Default.USBDeviceName;
             }
             set
             {
-                _uSBDeviceName = value;
+                Settings.Default.USBDeviceName = value;
                 OnPropertyChanged(nameof(USBDeviceName));
                 SettingsHasBeenChanged();
             }
@@ -182,22 +205,31 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return _settingsChanged;
+                return settingsChanged;
             }
             set
             {
-                _settingsChanged = value;
+                settingsChanged = value;
                 OnPropertyChanged(nameof(SettingsChanged));
             }
         }
-        public OptionViewModel()
-        {
-        
-        }
         public void SettingsHasBeenChanged()
         {
-            _settingsChanged = true;
+            settingsChanged = true;
             OnSettingsChangedEvent();
+        }
+        public void SaveSettings()
+        {
+            if (DeviceCode.Length < 8)
+            {
+                int CodeLength = DeviceCode.Length;
+                for (int i = 0; i < 8 - CodeLength; i++)
+                {
+                    DeviceCode += 0;
+                }
+            }
+            Settings.Default.Save();
+            SettingsChanged = false;
         }
     }
 }

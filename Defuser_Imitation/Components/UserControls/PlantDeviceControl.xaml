@@ -9,11 +9,8 @@
     <UserControl.Resources>
         <SolidColorBrush x:Key="LocalColor" Color="#3C9895"/>
     </UserControl.Resources>
-    <Grid x:Name="MainControlGrid">
+    <Grid>
         <Grid>
-            <Grid.BitmapEffect>
-                <BlurBitmapEffect x:Name="ContentGridBitmapBlur" Radius="0"/>
-            </Grid.BitmapEffect>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>

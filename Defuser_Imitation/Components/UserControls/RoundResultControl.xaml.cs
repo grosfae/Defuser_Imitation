@@ -1,19 +1,8 @@
 ﻿using Defuser_Imitation.Pages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Defuser_Imitation.Components.UserControls
 {
@@ -22,15 +11,14 @@ namespace Defuser_Imitation.Components.UserControls
     /// </summary>
     public partial class RoundResultControl : UserControl
     {
-        Grid PlayPageGrid;
+        private Grid _playPageGrid;
         public int roundResultCode;
         public RoundResultControl(Grid playPageGrid)
         {
             InitializeComponent();
-            PlayPageGrid = playPageGrid;
+            _playPageGrid = playPageGrid;
             Opacity = 0;
 
-            MiscUtilities.soundPlayers["round_finish_sound"].Volume = Properties.Settings.Default.RoundVolume / 100f;
             MiscUtilities.soundPlayers["round_finish_sound"].Play();
         }
 
@@ -52,8 +40,8 @@ namespace Defuser_Imitation.Components.UserControls
                 RepeatBehavior = RepeatBehavior.Forever,
                 EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
             });
-            SolidColorBrush FirstOrbitColorResource = TryFindResource("FirstOrbitColor") as SolidColorBrush;
-            SolidColorBrush SecondOrbitColorResource = TryFindResource("SecondOrbitColor") as SolidColorBrush;
+            SolidColorBrush firstOrbitColorResource = TryFindResource("FirstOrbitColor") as SolidColorBrush;
+            SolidColorBrush secondOrbitColorResource = TryFindResource("SecondOrbitColor") as SolidColorBrush;
             switch (roundResultCode)
             {
                 case 0:
@@ -65,7 +53,7 @@ namespace Defuser_Imitation.Components.UserControls
                     AttackerGlyph.Visibility = Visibility.Visible;
                     AttackerSphere.RenderTransform.SetValue(ScaleTransform.ScaleXProperty, 1.2);
                     AttackerSphere.RenderTransform.SetValue(ScaleTransform.ScaleYProperty, 1.2);
-                    FirstOrbitColorResource.Color = Color.FromRgb(255, 255, 255);
+                    firstOrbitColorResource.Color = Color.FromRgb(255, 255, 255);
                     AttackerPath.Fill = TryFindResource("ElementThemeColor") as SolidColorBrush;
                     break;
                 case 2:
@@ -75,7 +63,7 @@ namespace Defuser_Imitation.Components.UserControls
                     DefenderGlyph.Visibility = Visibility.Visible;
                     DefenderSphere.RenderTransform.SetValue(ScaleTransform.ScaleXProperty, 1.2);
                     DefenderSphere.RenderTransform.SetValue(ScaleTransform.ScaleYProperty, 1.2);
-                    SecondOrbitColorResource.Color = Color.FromRgb(255, 255, 255);
+                    secondOrbitColorResource.Color = Color.FromRgb(255, 255, 255);
                     DefenderPath.Fill = TryFindResource("ElementThemeColor") as SolidColorBrush;
                     break;
                 case 3:
@@ -85,7 +73,7 @@ namespace Defuser_Imitation.Components.UserControls
                     DefenderGlyph.Visibility = Visibility.Visible;
                     DefenderSphere.RenderTransform.SetValue(ScaleTransform.ScaleXProperty, 1.2);
                     DefenderSphere.RenderTransform.SetValue(ScaleTransform.ScaleYProperty, 1.2);
-                    SecondOrbitColorResource.Color = Color.FromRgb(255, 255, 255);
+                    secondOrbitColorResource.Color = Color.FromRgb(255, 255, 255);
                     DefenderPath.Fill = TryFindResource("ElementThemeColor") as SolidColorBrush;
                     break;
             }
@@ -111,14 +99,14 @@ namespace Defuser_Imitation.Components.UserControls
         private void PlayAgainBtn_Click(object sender, RoutedEventArgs e)
         {
             MiscUtilities.soundPlayers["round_finish_sound"].Stop();
-            var playPage = PlayPageGrid.Parent as PlayPage;
+            var playPage = _playPageGrid.Parent as PlayPage;
             playPage.NavigationService.Navigate(new PlayPage());
         }
 
         private void MenuBtn_Click(object sender, RoutedEventArgs e)
         {
             MiscUtilities.soundPlayers["round_finish_sound"].Stop();
-            var playPage = PlayPageGrid.Parent as PlayPage;
+            var playPage = _playPageGrid.Parent as PlayPage;
             playPage.NavigationService.Navigate(new MenuPage());
         }
     }

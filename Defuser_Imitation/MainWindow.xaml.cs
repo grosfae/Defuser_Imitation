@@ -13,8 +13,6 @@ namespace Defuser_Imitation
         public MainWindow()
         {
             InitializeComponent();
-            MiscUtilities.DownloadSounds();
-            GitHubUpdater.CheckAndClearTempFolder();
             MainFrame.Content = new MenuPage();
         }
         private void MainFrame_Navigated(object sender, NavigationEventArgs e)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Data;
 
 namespace Defuser_Imitation.Converters
@@ -11,10 +10,10 @@ namespace Defuser_Imitation.Converters
             if (value != null && parameter != null)
             {
                 double param = double.Parse(parameter.ToString());
-                double WidthValue = (double)value;
-                return WidthValue + param;
+                double widthValue = (double)value;
+                return widthValue + param;
             }
-            return null;
+            return 0;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -34,10 +34,10 @@ namespace Defuser_Imitation_Updater.Components.UserControls
         }
         private void Storyboard_Completed(object sender, EventArgs e)
         {
-            var Parent = this.Parent as Canvas;
-            if (Parent != null)
+            Canvas parent = (Canvas)this.Parent;
+            if (parent != null)
             {
-                Parent.Children.Remove(this);
+                parent.Children.Remove(this);
             }
         }
     }

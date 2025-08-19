@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Defuser_Imitation.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
-      Title="PlayPage">
+      Title="PlayPage" Background="#FF121212">
     <Grid x:Name="MainPlayGrid">
         
     </Grid>

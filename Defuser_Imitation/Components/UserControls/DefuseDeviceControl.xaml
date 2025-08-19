@@ -14,11 +14,8 @@
     <UserControl.Background>
         <ImageBrush Stretch="UniformToFill" ImageSource="/Resources/sIgnal_grid_background.jpg"/>
     </UserControl.Background>
-    <Grid x:Name="MainControlGrid">
+    <Grid>
         <Grid>
-            <Grid.BitmapEffect>
-                <BlurBitmapEffect x:Name="ContentGridBitmapBlur" Radius="0"/>
-            </Grid.BitmapEffect>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -26,14 +23,14 @@
             </Grid.RowDefinitions>
             <Viewbox VerticalAlignment="Top" Grid.Row="0" Width="3000" Height="500" HorizontalAlignment="Center">
                 <Grid Height="550">
-                    <Path Name="PathOriginalSignal" Data="{Binding Sinusoid, Mode=OneWay, Source={StaticResource SinusWave}}" Margin="0 0 0 100" Stroke="White" Opacity="0.3" StrokeThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+                    <Path Name="PathOriginalSignal" d:Data="{Binding Sinusoid, Mode=OneWay, Source={StaticResource SinusWave}}" Margin="0 0 0 100" Stroke="White" Opacity="0.3" StrokeThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
                         <Path.RenderTransform>
-                            <TranslateTransform X="0"/>
+                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
                         </Path.RenderTransform>
                     </Path>
-                    <Path Name="PathDeviceSignal" Data="{Binding Sinusoid, Mode=OneWay, Source={StaticResource SinusWave}}" Margin="0 0 0 100" Stroke="{StaticResource LocalColor}" Opacity="1" StrokeThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+                    <Path Name="PathDeviceSignal" d:Data="{Binding Sinusoid, Mode=OneWay, Source={StaticResource SinusWave}}" Margin="0 0 0 100" Stroke="{StaticResource LocalColor}" Opacity="1" StrokeThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
                         <Path.RenderTransform>
-                            <TranslateTransform X="0"/>
+                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
                         </Path.RenderTransform>
                     </Path>
                 </Grid>
@@ -68,16 +65,16 @@
                         <StackPanel Orientation="Horizontal" Width="400">
                             <TextBlock FontFamily="{StaticResource BravoFont}" Text="&gt;" Foreground="#3C9895" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"/>
                             <StackPanel Name="StDeviceCode" Orientation="Horizontal" VerticalAlignment="Center" Margin="10 0 0 0">
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" GotFocus="DigitBlock_GotFocus"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" GotFocus="DigitBlock_GotFocus"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" GotFocus="DigitBlock_GotFocus"/>
+                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
                                 <TextBlock FontFamily="{StaticResource DigitFont}" Text="−" FontSize="30" Foreground="{StaticResource LocalColor}"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" GotFocus="DigitBlock_GotFocus"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" GotFocus="DigitBlock_GotFocus"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" GotFocus="DigitBlock_GotFocus"/>
+                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
                                 <TextBlock FontFamily="{StaticResource DigitFont}" Text="−" FontSize="30" Foreground="{StaticResource LocalColor}"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" GotFocus="DigitBlock_GotFocus"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" GotFocus="DigitBlock_GotFocus"/>
+                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
                             </StackPanel>
                             <TextBlock Name="TbCountdown" FontFamily="{StaticResource DigitFont}" Foreground="White" Text="000" FontSize="26" VerticalAlignment="Center" Margin="55 5 0 0" Opacity="0.3" Width="60" TextAlignment="Center"/>
                         </StackPanel>

@@ -1,16 +1,11 @@
 ﻿using Defuser_Imitation.Components.ViewModels;
-using Defuser_Imitation.Properties;
-using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media.Animation;
-using System.Xml;
 
 namespace Defuser_Imitation.Components.UserControls
 {
@@ -31,7 +26,7 @@ namespace Defuser_Imitation.Components.UserControls
         }
         private void GuideChapterBtn_Click(object sender, RoutedEventArgs e)
         {
-            guideChapterViewModel.SelectedGuideChapter = (sender as Button).DataContext as GuideChapter;
+            guideChapterViewModel.SelectedGuideChapter = (GuideChapter)((Button)sender).DataContext;
             ScrollGuide.ScrollToTop();
             LoadFlowDocumentFromResources(RTBGuide, guideChapterViewModel.SelectedGuideChapter.DocumentPath);
         }
@@ -42,8 +37,8 @@ namespace Defuser_Imitation.Components.UserControls
             {
                 using (Stream stream = streamInfo.Stream)
                 {
-                    FlowDocument flowDoc = (FlowDocument)XamlReader.Load(stream);
-                    richTextBox.Document = flowDoc;
+                    FlowDocument flowDocument = (FlowDocument)XamlReader.Load(stream);
+                    richTextBox.Document = flowDocument;
                 }
             }
 
@@ -91,11 +86,10 @@ namespace Defuser_Imitation.Components.UserControls
                 isClosed = true;
                 var window = Window.GetWindow(this);
                 window.KeyDown -= UserControl_KeyDown;
-
-                var ParentElement = this.Parent as Grid;
-                if (ParentElement != null && ParentElement.Children.Contains(this))
+                var parentElement = this.Parent as Grid;
+                if (parentElement != null && parentElement.Children.Contains(this))
                 {
-                    ParentElement.Children.Remove(this);
+                    parentElement.Children.Remove(this);
                 }
             }
         }
