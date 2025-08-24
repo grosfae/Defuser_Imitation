@@ -21,7 +21,7 @@ namespace Defuser_Imitation_Updater
             animationTimer.Interval = TimeSpan.FromSeconds(0.7);
             animationTimer.Tick += AnimationTimer_Tick;
             
-            TbState.Text = "Необходимо запустить основное приложение";
+            TbState.Text = "Проверка обновлений происходит через основное приложение";
             if(Updater.CheckInternetConnection() == true)
             {
                 Task.Run(UpdateMainApp);

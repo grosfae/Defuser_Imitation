@@ -6,7 +6,7 @@
              StartupUri="MainWindow.xaml" Startup="Application_Startup">
     <Application.Resources>
         <!--Fonts-->
-        <FontFamily x:Key="DigitFont">pack://application:,,,/Resources/Fonts/#Aldrich</FontFamily>
+        <FontFamily x:Key="DigitFont">pack://application:,,,/Resources/Fonts/#Aldrich Cyrillic</FontFamily>
         <FontFamily x:Key="BravoFont">pack://application:,,,/Resources/Fonts/#BravoRG</FontFamily>
         <FontFamily x:Key="RobotoFont">pack://application:,,,/Resources/Fonts/#Roboto Condensed</FontFamily>
 
@@ -60,7 +60,7 @@
         
         <!--TextBox-->
         <Style x:Key="CodeBox" TargetType="TextBox">
-            <Setter Property="FontFamily" Value="/Resources/Fonts/#Aldrich"/>
+            <Setter Property="FontFamily" Value="/Resources/Fonts/#Aldrich Cyrillic"/>
             <Setter Property="Background" Value="{x:Null}"/>
             <Setter Property="BorderBrush" Value="{x:Null}"/>
             <Setter Property="BorderThickness" Value="0"/>

@@ -11,9 +11,11 @@
     <Version>0.1.0.2</Version>
     <AssemblyVersion>0.1.0.2</AssemblyVersion>
     <FileVersion>0.1.0.2</FileVersion>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Fonts\aldrichcyrillic.otf" />
     <None Remove="Resources\menu_background.jpg" />
     <None Remove="Resources\Sounds\defuse_stage_sound.mp3" />
     <None Remove="Resources\Sounds\round_start_sound.mp3" />
@@ -35,7 +37,7 @@
   <ItemGroup>
     <Resource Include="Resources\background_grid.png" />
     <Resource Include="Resources\controls_background.jpg" />
-    <Resource Include="Resources\Fonts\Aldrich-Regular.ttf" />
+    <Resource Include="Resources\Fonts\aldrichcyrillic.otf" />
     <Resource Include="Resources\Fonts\BravoRG.otf" />
     <Resource Include="Resources\Fonts\RobotoCondensed-VariableFont_wght.ttf" />
     <Resource Include="Resources\GitHub\github-mark-white.png" />
@@ -78,6 +80,10 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Resources\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
