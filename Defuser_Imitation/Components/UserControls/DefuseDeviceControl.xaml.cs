@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Timer = System.Timers.Timer;
@@ -37,9 +36,6 @@ namespace Defuser_Imitation.Components.UserControls
         private List<int> indicatorActiveBlockList = new();
         private List<int> indicatorDeactiveBlockList = new();
 
-        private SinDrawGeometry signalWaveOriginal = new();
-        private SinDrawGeometry signalWaveDevice = new();
-
         public DefuseDeviceControl(Grid playPageGrid, int[] manualDigitBoxIndexArray)
         {
             InitializeComponent();
@@ -47,7 +43,7 @@ namespace Defuser_Imitation.Components.UserControls
             _playPageGrid = playPageGrid;
             ((Page)playPageGrid.Parent).KeyDown += PlayPage_KeyDown;
 
-            MiscUtilities.soundPlayers["defuse_stage_sound"].MediaEnded += ActiveDeviceSoundPlayer_MediaEnded;
+            MiscUtilities.SoundPlayers["defuse_stage_sound"].MediaEnded += ActiveDeviceSoundPlayer_MediaEnded;
 
             DrawIndicatorElements();
             DisplayDeviceCodeBlock();
@@ -68,37 +64,37 @@ namespace Defuser_Imitation.Components.UserControls
                 usbCheckTimer.Elapsed += USBCheckTimer_Elapsed;
                 usbCheckTimer.Enabled = true;
             }
-            MiscUtilities.soundPlayers["defuse_stage_sound"].Play();
+            MiscUtilities.SoundPlayers["defuse_stage_sound"].Play();
         }
         private void ActiveDeviceSoundPlayer_MediaEnded(object sender, EventArgs e)
         {
             if (deactivationPhaseCountdown > 15)
             {
-                MiscUtilities.soundPlayers["defuse_stage_sound"].Position = TimeSpan.FromSeconds(0);
+                MiscUtilities.SoundPlayers["defuse_stage_sound"].Position = TimeSpan.FromSeconds(0);
             }
             else
             {
-                if (MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
+                if (MiscUtilities.SoundPlayers["defuse_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
                 {
-                    MiscUtilities.soundPlayers["defuse_stage_sound"].Position = TimeSpan.FromSeconds(0);
+                    MiscUtilities.SoundPlayers["defuse_stage_sound"].Position = TimeSpan.FromSeconds(0);
                 }
                 else
                 {
-                    MiscUtilities.soundPlayers["defuse_stage_sound"].Position = MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(deactivationPhaseCountdown);
+                    MiscUtilities.SoundPlayers["defuse_stage_sound"].Position = MiscUtilities.SoundPlayers["defuse_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(deactivationPhaseCountdown);
                 }
             }
         }
         private void deactivationPhaseTimer_Tick(object sender, EventArgs e)
         {
-            if (deactivationPhaseCountdown == 15 && MiscUtilities.soundPlayers["defuse_stage_sound"].Position < MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration - TimeSpan.FromSeconds(15))
+            if (deactivationPhaseCountdown == 15 && MiscUtilities.SoundPlayers["defuse_stage_sound"].Position < MiscUtilities.SoundPlayers["defuse_stage_sound"].NaturalDuration - TimeSpan.FromSeconds(15))
             {
-                if (MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
+                if (MiscUtilities.SoundPlayers["defuse_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
                 {
-                    MiscUtilities.soundPlayers["defuse_stage_sound"].Position = TimeSpan.FromSeconds(0);
+                    MiscUtilities.SoundPlayers["defuse_stage_sound"].Position = TimeSpan.FromSeconds(0);
                 }
                 else
                 {
-                    MiscUtilities.soundPlayers["defuse_stage_sound"].Position = MiscUtilities.soundPlayers["defuse_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(deactivationPhaseCountdown);
+                    MiscUtilities.SoundPlayers["defuse_stage_sound"].Position = MiscUtilities.SoundPlayers["defuse_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(deactivationPhaseCountdown);
                 }
             }
             if (deactivationPhaseCountdown != 1)
@@ -120,7 +116,6 @@ namespace Defuser_Imitation.Components.UserControls
                 Application.Current.Dispatcher.Invoke(() => FinishRound(3));
             }
         }
-
         private void DrawIndicatorElements()
         {
             IndicatorGrid.Children.Clear();
@@ -163,6 +158,10 @@ namespace Defuser_Imitation.Components.UserControls
         }
         private void ActivateIndicators()
         {
+            if (indicatorDeactiveBlockList.Count == 0)
+            {
+                return;
+            }
             for (int i = 0; i < 3; i++)
             {
                 var indicatorDeactiveListElement = indicatorDeactiveBlockList[0];
@@ -175,7 +174,7 @@ namespace Defuser_Imitation.Components.UserControls
                 });
                 indicatorActiveBlockList.Add(indicatorDeactiveListElement);
                 indicatorDeactiveBlockList.Remove(indicatorDeactiveListElement);
-            }
+            } 
         }
         private void DeactivateIndicators()
         {
@@ -296,7 +295,7 @@ namespace Defuser_Imitation.Components.UserControls
             if (e.Key == Key.Back || e.Key == Key.Delete)
             {
                 SolidColorBrush localColorResource = (SolidColorBrush)TryFindResource("LocalColor");
-                localColorResource.Color = MiscUtilities.defaultColor;
+                localColorResource.Color = MiscUtilities.DefaultColor;
                 if (string.IsNullOrWhiteSpace(((TextBox)sender).Text))
                 {
                     FocusPreviousDigitBlock((UIElement)sender);
@@ -323,8 +322,8 @@ namespace Defuser_Imitation.Components.UserControls
                         FinishRound(3);
                         return;
                     }
-                    SolidColorBrush LocalColorResource = (SolidColorBrush)TryFindResource("LocalColor");
-                    LocalColorResource.Color = MiscUtilities.redColor;
+                    SolidColorBrush localColorResource = (SolidColorBrush)TryFindResource("LocalColor");
+                    localColorResource.Color = MiscUtilities.RedColor;
                     return;
                 }
                 FocusNextDigitBlock(digitBlock);
@@ -332,41 +331,48 @@ namespace Defuser_Imitation.Components.UserControls
         }
         private void SetOriginalSignal()
         {
-            signalWaveOriginal.X0 = 0;
-            signalWaveOriginal.X1 = 20;
-            signalWaveOriginal.StepsCount = 400;
-
-            signalWaveDevice.X0 = 0;
-            signalWaveDevice.X1 = 20;
-            signalWaveDevice.StepsCount = 400;
-
-            int SettingsDeviceCodeSumm = 0;
-            for (int i = 0; i < defuseCode.Length; ++i)
+            int settingsDeviceCodeSumm = 0;
+            for (int i = 0; i < defuseCode.Length; i++)
             {
-                SettingsDeviceCodeSumm += int.Parse(defuseCode[i].ToString());
+                settingsDeviceCodeSumm += int.Parse(defuseCode[i].ToString()) * (i + 1) / defuseCode.Length;
             }
-            signalWaveOriginal.Scale = SettingsDeviceCodeSumm + 100;
-            signalWaveOriginal.Multiplier = SettingsDeviceCodeSumm / defuseCode.Length;
-            PathOriginalSignal.Data = signalWaveOriginal.Sinusoid;
+            double amplitude = settingsDeviceCodeSumm / 3 / 1.7;
+            double frequency = 0.15;
+            for (int x = 0; x < 200; x++)
+            {
+                double y = amplitude * Math.Sin(frequency * x);
+                OriginalSignalFigure.Segments.Add(new LineSegment(new Point(x, y), true));
+                DeviceSignalFigure.Segments.Add(new LineSegment(new Point(x, y), true));
+            }
         }
         private void SetDeviceSignal()
         {
-            int defuseCodeSumm = 0;
+            double defuseCodeSumm = 0;
             for (int i = 0; i < inputedCode.Length; i++)
             {
-                defuseCodeSumm += int.Parse(inputedCode[i].ToString());
+                defuseCodeSumm += int.Parse(inputedCode[i].ToString()) * (i + 1) / inputedCode.Length;
             }
-            signalWaveDevice.Scale = defuseCodeSumm + 100;
-            signalWaveDevice.Multiplier = defuseCodeSumm / defuseCode.Length;
-            PathDeviceSignal.Data = signalWaveDevice.Sinusoid;
+            double amplitude = defuseCodeSumm / 3 / 1.7;
+            double frequency = 0.15;
+            foreach (LineSegment lineSegment in DeviceSignalFigure.Segments.Cast<LineSegment>())
+            {
+                Point point = lineSegment.Point;
+                double y = amplitude * Math.Sin(frequency * point.X);
+                point.Y = y; 
+                lineSegment.BeginAnimation(LineSegment.PointProperty, new PointAnimation()
+                {
+                    To = point,
+                    Duration = TimeSpan.FromSeconds(1),
+                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+                });
+            }
         }
-          
         private void FinishRound(int ResultCode)
         {
             deactivationPhaseTimer.Stop();
             usbCheckTimer.Stop();
             StDeviceCode.IsEnabled = false;
-            MiscUtilities.soundPlayers["defuse_stage_sound"].Stop();
+            MiscUtilities.SoundPlayers["defuse_stage_sound"].Stop();
             var playPage = (PlayPage)_playPageGrid.Parent;
             playPage.KeyDown -= PlayPage_KeyDown;
             
@@ -412,7 +418,7 @@ namespace Defuser_Imitation.Components.UserControls
             }
             StDeviceCode.IsEnabled = true;
             StDeviceCode.Children[digitBlockIndex].Focus();
-            MiscUtilities.soundPlayers["defuse_stage_sound"].Play();
+            MiscUtilities.SoundPlayers["defuse_stage_sound"].Play();
         }
         private void PauseRound()
         {
@@ -420,7 +426,7 @@ namespace Defuser_Imitation.Components.UserControls
             deactivationPhaseTimer.Stop();
             usbCheckTimer.Stop();
             StDeviceCode.IsEnabled = false;
-            MiscUtilities.soundPlayers["defuse_stage_sound"].Pause();
+            MiscUtilities.SoundPlayers["defuse_stage_sound"].Pause();
             RoundPauseControl roundPauseControl = new RoundPauseControl(_playPageGrid);
             Panel.SetZIndex(roundPauseControl, 2);
             roundPauseControl.ContinueRound += RoundPauseControl_ContinueRound;

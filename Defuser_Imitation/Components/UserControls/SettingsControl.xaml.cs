@@ -1,5 +1,4 @@
 ﻿using Defuser_Imitation.Components.ViewModels;
-using Defuser_Imitation.Properties;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,10 +35,10 @@ namespace Defuser_Imitation.Components.UserControls
         {
             if(optionViewModel.SettingsChanged == true)
             {
-                var AcceptChangesControlAsChild = MainGrid.Children.OfType<AcceptChangesControl>().FirstOrDefault();
-                if (MainGrid != null && MainGrid.Children.Contains(AcceptChangesControlAsChild))
+                var acceptChangesControlAsChild = MainGrid.Children.OfType<AcceptChangesControl>().FirstOrDefault();
+                if (MainGrid != null && MainGrid.Children.Contains(acceptChangesControlAsChild))
                 {
-                    MainGrid.Children.Remove(AcceptChangesControlAsChild);
+                    MainGrid.Children.Remove(acceptChangesControlAsChild);
                     SelfDispose();
                     return;
                 }
@@ -59,20 +58,18 @@ namespace Defuser_Imitation.Components.UserControls
                 var window = Window.GetWindow(this);
                 window.KeyDown -= UserControl_KeyDown;
 
-                var ParentElement = this.Parent as Grid;
-                if (ParentElement != null && ParentElement.Children.Contains(this))
+                var parentElement = this.Parent as Grid;
+                if (parentElement != null && parentElement.Children.Contains(this))
                 {
-                    ParentElement.Children.Remove(this);
+                    parentElement.Children.Remove(this);
                 }
             }
         }
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
             window.KeyDown += UserControl_KeyDown;
         }
-
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
@@ -94,7 +91,7 @@ namespace Defuser_Imitation.Components.UserControls
             {
                 TbSettingHeader.Text = "КОД УСТРОЙСТВА";
                 TbSettingDescription.Text = "Установка собственного кода устройства. Код устройства используется для его активации/деактивации. \n" +
-                    "Для применения введённого кода необходимо нажать клавишу Enter.";
+                    "Для завершения редактирования необходимо нажать клавишу Enter.";
             }
             else if(settingBlock == BlockManualDigit)
             {
@@ -148,7 +145,7 @@ namespace Defuser_Imitation.Components.UserControls
             {
                 TbSettingHeader.Text = "НАИМЕНОВАНИЕ НОСИТЕЛЯ";
                 TbSettingDescription.Text = "Установка наименования USB-носителя для ускоренной деактивации устройства.\n" +
-                    "Для применения введённого наименования необходимо нажать клавишу Enter.";
+                    "Для завершения редактирования необходимо нажать клавишу Enter.";
             }
         }
         private void SettingBlock_MouseEnter(object sender, MouseEventArgs e)
@@ -160,11 +157,10 @@ namespace Defuser_Imitation.Components.UserControls
             TbSettingHeader.Text = "";
             TbSettingDescription.Text = "";
         }
-
         private void SettingsDefaultBtn_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Default.Reset();
-            optionViewModel.SaveSettings();
+            optionViewModel.ResetSettings();
+            SettingsSaveBtn.IsEnabled = false;
         }
         private void SettingsSaveBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -199,7 +195,6 @@ namespace Defuser_Imitation.Components.UserControls
                     break;
             }
         }
-
         private void OptionViewModel_SettingsChangedEvent(object sender, EventArgs e)
         {
             if (optionViewModel.SettingsChanged == true)
@@ -210,11 +205,7 @@ namespace Defuser_Imitation.Components.UserControls
         private void AcceptChangesControl_AcceptChanges(object sender, EventArgs e)
         {
             optionViewModel.SaveSettings();
-            SettingsSaveBtn.IsEnabled = false;
-            DataContext = null;
-            optionViewModel = new OptionViewModel();
-            optionViewModel.SettingsChangedEvent += OptionViewModel_SettingsChangedEvent;
-            DataContext = optionViewModel;
+            CloseSettings();
         }
         private void AcceptChangesControl_DiscardChanges(object sender, EventArgs e)
         {

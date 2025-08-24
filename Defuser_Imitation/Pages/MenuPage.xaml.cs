@@ -20,6 +20,7 @@ namespace Defuser_Imitation.Pages
         public MenuPage()
         {
             InitializeComponent();
+            MiscUtilities.ClearDeviceCode();
             SetTime();
             menuTimer.Interval = TimeSpan.FromSeconds(1);
             menuTimer.Tick += MenuTimer_Tick;
@@ -29,6 +30,10 @@ namespace Defuser_Imitation.Pages
             {
                 Task.Run(GitHubCheckUpdateAsync);
                 App.UpdateHasBeenAutoChecked = true;
+            }
+            else
+            {
+                SetDefaultUpdateText();
             }
         }
 
@@ -64,11 +69,11 @@ namespace Defuser_Imitation.Pages
         }
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)
         {
-            SettingsControl settingsWindow = new SettingsControl();
-            Panel.SetZIndex(settingsWindow, 3);
-            settingsWindow.Opacity = 0;
-            PageGrid.Children.Add(settingsWindow);
-            settingsWindow.BeginAnimation(OpacityProperty, new DoubleAnimation()
+            SettingsControl settingsControl = new SettingsControl();
+            Panel.SetZIndex(settingsControl, 3);
+            settingsControl.Opacity = 0;
+            PageGrid.Children.Add(settingsControl);
+            settingsControl.BeginAnimation(OpacityProperty, new DoubleAnimation()
             {
                 Duration = TimeSpan.FromSeconds(0.2),
                 To = 1,
@@ -85,7 +90,10 @@ namespace Defuser_Imitation.Pages
         }
         private void GitHubBtn_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/grosfae?tab=repositories");
+            Process.Start(new ProcessStartInfo("https://github.com/grosfae/Defuser_Imitation") 
+            {
+                UseShellExecute = true 
+            });
         }
         private void GuideBtn_Click(object sender, RoutedEventArgs e)
         {

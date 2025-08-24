@@ -14,10 +14,10 @@
     <UserControl.Background>
         <SolidColorBrush Color="#FF121212" Opacity="0.6"/>
     </UserControl.Background>
-    <Grid>
+    <Grid HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1000"/>
-            <ColumnDefinition Width="920"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Viewbox>
             <StackPanel HorizontalAlignment="Left" Margin="20 0 0 0" VerticalAlignment="Center" Grid.Column="0">

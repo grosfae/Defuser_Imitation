@@ -7,6 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="48" d:DesignWidth="400" MouseLeftButtonDown="userControl_MouseLeftButtonDown">
     <Grid>
-        <TextBox Name="TbOption" Style="{StaticResource SettingTextBox}" HorizontalContentAlignment="Center"  Width="400" Height="48" FontSize="26" Text="{Binding Text, ElementName=userControl}" MaxLength="{Binding MaxLength, ElementName=userControl}" KeyDown="TbOption_KeyDown"/>
+        <TextBox Name="TbOption" Style="{StaticResource SettingTextBox}" HorizontalContentAlignment="Center"  Width="400" Height="48" FontSize="26" Text="{Binding Text, ElementName=userControl, UpdateSourceTrigger=PropertyChanged}" MaxLength="{Binding MaxLength, ElementName=userControl}" KeyDown="TbOption_KeyDown"/>
     </Grid>
 </UserControl>

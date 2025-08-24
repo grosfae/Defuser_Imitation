@@ -6,38 +6,45 @@
              xmlns:local="clr-namespace:Defuser_Imitation.Components.UserControls"
              xmlns:components="clr-namespace:Defuser_Imitation.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="1920" Loaded="DefuseDeviceControl_Loaded">
+             d:DesignHeight="1440" d:DesignWidth="2560" Loaded="DefuseDeviceControl_Loaded">
     <UserControl.Resources>
         <SolidColorBrush x:Key="LocalColor" Color="#3C9895"/>
-        <components:SinDrawGeometry x:Key="SinusWave" X0="0" X1="20" Scale="150" StepsCount="400"/>
     </UserControl.Resources>
     <UserControl.Background>
         <ImageBrush Stretch="UniformToFill" ImageSource="/Resources/sIgnal_grid_background.jpg"/>
     </UserControl.Background>
-    <Grid>
-        <Grid>
+    <Viewbox>
+        <Grid Width="1920" Height="1080">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Viewbox VerticalAlignment="Top" Grid.Row="0" Width="3000" Height="500" HorizontalAlignment="Center">
-                <Grid Height="550">
-                    <Path Name="PathOriginalSignal" d:Data="{Binding Sinusoid, Mode=OneWay, Source={StaticResource SinusWave}}" Margin="0 0 0 100" Stroke="White" Opacity="0.3" StrokeThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
-                        </Path.RenderTransform>
-                    </Path>
-                    <Path Name="PathDeviceSignal" d:Data="{Binding Sinusoid, Mode=OneWay, Source={StaticResource SinusWave}}" Margin="0 0 0 100" Stroke="{StaticResource LocalColor}" Opacity="1" StrokeThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
-                        </Path.RenderTransform>
-                    </Path>
+            <Viewbox VerticalAlignment="Top" Grid.Row="0" HorizontalAlignment="Center">
+                <Grid Height="550" Width="1920">
+                    <Viewbox VerticalAlignment="Bottom" Margin="0 0 0 160">
+                        <Grid>
+                            <Path Stroke="White" Opacity="0.3" StrokeThickness="1" Name="OriginalSignalPath" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure x:Name="OriginalSignalFigure"/>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                            <Path Stroke="{StaticResource LocalColor}" StrokeThickness="1" Name="DeviceSignalPath" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure x:Name="DeviceSignalFigure"/>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                        </Grid>
+                    </Viewbox>
                 </Grid>
             </Viewbox>
             <Viewbox Grid.Row="1" Margin="16 20 16 0">
                 <StackPanel>
-                    <Rectangle Fill="#3C9895" Height="4" Width="1872"/>
+                    <Rectangle Fill="#3C9895" Height="4" />
                     <Grid Name="IndicatorGrid" Height="90" Width="1880" Margin="0 4">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -59,28 +66,26 @@
                     <Rectangle Fill="#3C9895" Height="4" Width="1872"/>
                 </StackPanel>
             </Viewbox>
-            <Viewbox Grid.Row="2" VerticalAlignment="Top" Margin="20 0 20 0">
-                <Grid Height="400" Width="1880">
-                    <Viewbox>
-                        <StackPanel Orientation="Horizontal" Width="400">
-                            <TextBlock FontFamily="{StaticResource BravoFont}" Text="&gt;" Foreground="#3C9895" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"/>
-                            <StackPanel Name="StDeviceCode" Orientation="Horizontal" VerticalAlignment="Center" Margin="10 0 0 0">
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
-                                <TextBlock FontFamily="{StaticResource DigitFont}" Text="−" FontSize="30" Foreground="{StaticResource LocalColor}"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
-                                <TextBlock FontFamily="{StaticResource DigitFont}" Text="−" FontSize="30" Foreground="{StaticResource LocalColor}"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
-                                <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
-                            </StackPanel>
-                            <TextBlock Name="TbCountdown" FontFamily="{StaticResource DigitFont}" Foreground="White" Text="000" FontSize="26" VerticalAlignment="Center" Margin="55 5 0 0" Opacity="0.3" Width="60" TextAlignment="Center"/>
+            <Viewbox Grid.Row="2" VerticalAlignment="Center" Margin="20 0 20 0">
+                <Grid >
+                    <StackPanel Orientation="Horizontal" Width="400">
+                        <TextBlock FontFamily="{StaticResource BravoFont}" Text="&gt;" Foreground="#3C9895" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"/>
+                        <StackPanel Name="StDeviceCode" Orientation="Horizontal" VerticalAlignment="Center" Margin="10 0 0 0">
+                            <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                            <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                            <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                            <TextBlock FontFamily="{StaticResource DigitFont}" Text="−" FontSize="30" Foreground="{StaticResource LocalColor}"/>
+                            <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                            <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                            <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                            <TextBlock FontFamily="{StaticResource DigitFont}" Text="−" FontSize="30" Foreground="{StaticResource LocalColor}"/>
+                            <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
+                            <TextBox Style="{StaticResource CodeBox}" FontSize="30" Width="26" Foreground="{StaticResource LocalColor}" ContextMenu="{x:Null}" ContextMenuService.IsEnabled="False" ContextMenuService.ShowOnDisabled="False"/>
                         </StackPanel>
-                    </Viewbox>
+                        <TextBlock Name="TbCountdown" FontFamily="{StaticResource DigitFont}" Foreground="White" Text="000" FontSize="26" VerticalAlignment="Center" Margin="55 5 0 0" Opacity="0.3" Width="60" TextAlignment="Center"/>
+                    </StackPanel>
                 </Grid>
             </Viewbox>
         </Grid>
-    </Grid>
+    </Viewbox>
 </UserControl>

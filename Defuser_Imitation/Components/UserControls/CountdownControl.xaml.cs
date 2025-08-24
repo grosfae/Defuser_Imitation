@@ -28,8 +28,8 @@ namespace Defuser_Imitation.Components.UserControls
             countdownControlTimer.Interval = TimeSpan.FromSeconds(1);
             countdownControlTimer.Tick += CountdownControlTimer_Tick;
             CheckSoundPosition();
-            MiscUtilities.soundPlayers["round_start_sound"].MediaEnded += CountdownControl_MediaEnded;
-            MiscUtilities.soundPlayers["round_start_sound"].Play();
+            MiscUtilities.SoundPlayers["round_start_sound"].MediaEnded += CountdownControl_MediaEnded;
+            MiscUtilities.SoundPlayers["round_start_sound"].Play();
         }
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
@@ -41,13 +41,13 @@ namespace Defuser_Imitation.Components.UserControls
         }
         private void CheckSoundPosition()
         {
-            if (MiscUtilities.soundPlayers["round_start_sound"].NaturalDuration < TimeSpan.FromSeconds(_countdown))
+            if (MiscUtilities.SoundPlayers["round_start_sound"].NaturalDuration < TimeSpan.FromSeconds(_countdown))
             {
-                MiscUtilities.soundPlayers["round_start_sound"].Position = TimeSpan.FromSeconds(0);
+                MiscUtilities.SoundPlayers["round_start_sound"].Position = TimeSpan.FromSeconds(0);
             }
             else
             {
-                MiscUtilities.soundPlayers["round_start_sound"].Position = MiscUtilities.soundPlayers["round_start_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(_countdown);
+                MiscUtilities.SoundPlayers["round_start_sound"].Position = MiscUtilities.SoundPlayers["round_start_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(_countdown);
             }
         }
         private void CountdownControlTimer_Tick(object? sender, EventArgs e)
@@ -56,7 +56,7 @@ namespace Defuser_Imitation.Components.UserControls
             TbCountdown.Text = _countdown.ToString();
             if (_countdown == 0)
             {
-                MiscUtilities.soundPlayers["round_start_sound"].Stop();
+                MiscUtilities.SoundPlayers["round_start_sound"].Stop();
                 countdownControlTimer.Stop();
                 DoubleAnimation disappearAnimation = new DoubleAnimation()
                 { 
@@ -82,13 +82,13 @@ namespace Defuser_Imitation.Components.UserControls
         }
         public void PauseCountdown()
         {
-            MiscUtilities.soundPlayers["round_start_sound"].Pause();
+            MiscUtilities.SoundPlayers["round_start_sound"].Pause();
             countdownControlTimer.Stop();
         }
         public void ContinueCountdown()
         {
             CheckSoundPosition();
-            MiscUtilities.soundPlayers["round_start_sound"].Play();
+            MiscUtilities.SoundPlayers["round_start_sound"].Play();
             countdownControlTimer.Start();
         }
     }

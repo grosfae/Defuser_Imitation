@@ -7,6 +7,6 @@ namespace Defuser_Imitation_Updater
     /// </summary>
     public partial class App : Application
     {
-        
+
     }
 }

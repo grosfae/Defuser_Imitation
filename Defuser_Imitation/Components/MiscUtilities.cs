@@ -8,15 +8,16 @@ namespace Defuser_Imitation.Components
 {
     public class MiscUtilities
     {
-        public static Color redColor = Color.FromRgb(191, 25, 25);
-        public static Color defaultColor = Color.FromRgb(60, 152, 149);
+        private static string deviceCode = string.Empty;
+        public static Color RedColor = Color.FromRgb(191, 25, 25);
+        public static Color DefaultColor = Color.FromRgb(60, 152, 149);
 
-        public static Dictionary<string, MediaPlayer> soundPlayers = [];
+        public static Dictionary<string, MediaPlayer> SoundPlayers = [];
         public static void PreloadSound(string key, string filePath)
         {
             MediaPlayer player = new();
             player.Open(new Uri(filePath));
-            soundPlayers[key] = player;
+            SoundPlayers[key] = player;
         }
         public static void DownloadSounds()
         {
@@ -27,35 +28,41 @@ namespace Defuser_Imitation.Components
         }
         public static void SetSoundsVolume()
         {
-            soundPlayers["plant_stage_sound"].Volume = Properties.Settings.Default.ActivationPhaseVolume / 100f;
-            soundPlayers["defuse_stage_sound"].Volume = Properties.Settings.Default.DeactivationPhaseVolume / 100f;
-            soundPlayers["round_start_sound"].Volume = Properties.Settings.Default.PreparationPhaseVolume / 100f;
-            soundPlayers["round_finish_sound"].Volume = Properties.Settings.Default.ComplitionPhaseVolume / 100f;
+            SoundPlayers["plant_stage_sound"].Volume = Properties.Settings.Default.ActivationPhaseVolume / 100f;
+            SoundPlayers["defuse_stage_sound"].Volume = Properties.Settings.Default.DeactivationPhaseVolume / 100f;
+            SoundPlayers["round_start_sound"].Volume = Properties.Settings.Default.PreparationPhaseVolume / 100f;
+            SoundPlayers["round_finish_sound"].Volume = Properties.Settings.Default.ComplitionPhaseVolume / 100f;
         }
         public static void ResetSoundPosition()
         {
-            foreach (var player in soundPlayers.Values)
+            foreach (var player in SoundPlayers.Values)
             {
                 player.Position = TimeSpan.Zero;
             }
         }
         public static string DeviceCode()
         {
-            string deviceCode = string.Empty;
-            switch (Settings.Default.DeviceTypeCode)
+            if (string.IsNullOrWhiteSpace(deviceCode))
             {
-                case 0:
-                    Random random = new();
-                    for (int i = 0; i < 8; i++)
-                    {
-                        deviceCode += random.Next(0,10);
-                    }
-                    break;
-                case 1:
-                    deviceCode = Settings.Default.DeviceCode;
-                    break;
+                switch (Settings.Default.DeviceTypeCode)
+                {
+                    case 0:
+                        Random random = new();
+                        for (int i = 0; i < 8; i++)
+                        {
+                            deviceCode += random.Next(0, 10);
+                        }
+                        break;
+                    case 1:
+                        deviceCode = Settings.Default.DeviceCode;
+                        break;
+                }
             }
             return deviceCode;
+        }
+        public static void ClearDeviceCode()
+        {
+            deviceCode = string.Empty;
         }
         public static string SetDeviceCode(Panel digitBlocksHostPanel)
         {

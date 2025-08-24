@@ -11,7 +11,7 @@
     </UserControl.Background>
 
     <Grid Name="MainGrid">
-        <Image Source="/Resources/controls_background.jpg" Width="1920" Height="1010" Stretch="UniformToFill" Margin="0 35"/>
+        <Image Source="/Resources/controls_background.jpg" Stretch="UniformToFill" Margin="0 35"/>
         <Viewbox VerticalAlignment="Top" Width="42" Height="85" Margin="0 100 0 0" HorizontalAlignment="Left" Focusable="False">
             <Button Name="BackBtn" Height="85" Width="42" Style="{StaticResource BackButton}" Focusable="False" Click="BackBtn_Click">
                 <Path Data="M14.7778 0H19V3L7.38889 14.5L19 27V30H14.7778L0 14.5L14.7778 0Z" Fill="#121212"/>

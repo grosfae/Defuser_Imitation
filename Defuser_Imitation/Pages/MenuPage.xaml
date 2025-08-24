@@ -47,7 +47,7 @@
                         </Button>
                         <StackPanel Orientation="Horizontal">
                             <Button Name="GuideBtn" Height="32" Width="120" Style="{StaticResource SmallMenuButton}" FontSize="16" Content="Руководство" Focusable="False" Click="GuideBtn_Click"/>
-                            <Button Name="GitHubBtn" Height="32" Width="120" Style="{StaticResource GitHubMenuButton}" Focusable="False" Margin="5 0 0 0" Click="GitHubBtn_Click"/>
+                            <Button Name="GitHubBtn" Height="32" Width="120" Style="{StaticResource GitHubMenuButton}" Focusable="False" Margin="5 0 0 0" Cursor="Hand" Click="GitHubBtn_Click"/>
                         </StackPanel>
                         <Button Name="ExitBtn" Height="32" Width="245" Style="{StaticResource SmallMenuButton}" Content="Выход" FontSize="16" Focusable="False" Margin="0 5 0 0" Click="ExitBtn_Click"/>
                     </StackPanel>

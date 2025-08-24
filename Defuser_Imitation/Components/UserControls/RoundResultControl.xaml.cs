@@ -19,7 +19,7 @@ namespace Defuser_Imitation.Components.UserControls
             _playPageGrid = playPageGrid;
             Opacity = 0;
 
-            MiscUtilities.soundPlayers["round_finish_sound"].Play();
+            MiscUtilities.SoundPlayers["round_finish_sound"].Play();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -98,14 +98,14 @@ namespace Defuser_Imitation.Components.UserControls
 
         private void PlayAgainBtn_Click(object sender, RoutedEventArgs e)
         {
-            MiscUtilities.soundPlayers["round_finish_sound"].Stop();
+            MiscUtilities.SoundPlayers["round_finish_sound"].Stop();
             var playPage = _playPageGrid.Parent as PlayPage;
             playPage.NavigationService.Navigate(new PlayPage());
         }
 
         private void MenuBtn_Click(object sender, RoutedEventArgs e)
         {
-            MiscUtilities.soundPlayers["round_finish_sound"].Stop();
+            MiscUtilities.SoundPlayers["round_finish_sound"].Stop();
             var playPage = _playPageGrid.Parent as PlayPage;
             playPage.NavigationService.Navigate(new MenuPage());
         }

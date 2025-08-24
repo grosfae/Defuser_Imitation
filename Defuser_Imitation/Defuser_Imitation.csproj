@@ -8,10 +8,9 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\app_icon.ico</ApplicationIcon>
     
-    <Version>0.1.0.0</Version>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
-    <InformationalVersion>0.1.0.0</InformationalVersion>
+    <Version>0.1.0.2</Version>
+    <AssemblyVersion>0.1.0.2</AssemblyVersion>
+    <FileVersion>0.1.0.2</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\app_icon.ico" />
     <Resource Include="Resources\background_grid.png" />
     <Resource Include="Resources\controls_background.jpg" />
     <Resource Include="Resources\Fonts\Aldrich-Regular.ttf" />
@@ -53,7 +51,6 @@
     <Resource Include="Resources\menu_background.jpg" />
     <Resource Include="Resources\sIgnal_grid_background.jpg" />
     <Resource Include="Resources\signal_mask.png" />
-    <Content Include="Resources\app_icon.ico" />
     <Content Include="Resources\Sounds\defuse_stage_sound.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

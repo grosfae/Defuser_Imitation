@@ -10,7 +10,7 @@
         <Grid.Background>
             <SolidColorBrush Color="#FF121212" Opacity="0.8"/>
         </Grid.Background>
-        <Viewbox Width="1920" Height="1080">
+        <Viewbox>
             <Grid Width="1920" Height="1080">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 140">
                     <Viewbox VerticalAlignment="Bottom" Width="500">

@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
 using System.Windows.Threading;
 
 
@@ -45,7 +44,7 @@ namespace Defuser_Imitation.Components.UserControls
             activationPhaseTimer.Tick += activationPhaseTimer_Tick;
             activationPhaseTimer.Interval = TimeSpan.FromSeconds(1);           
 
-            MiscUtilities.soundPlayers["plant_stage_sound"].MediaEnded += RoundSoundPlayer_MediaEnded;
+            MiscUtilities.SoundPlayers["plant_stage_sound"].MediaEnded += RoundSoundPlayer_MediaEnded;
 
             matrixAnimationTimer.Tick += MatrixAnimationTimer_Tick;
             matrixAnimationTimer.Interval = TimeSpan.FromMilliseconds(50);
@@ -65,7 +64,7 @@ namespace Defuser_Imitation.Components.UserControls
             {
                 activationPhaseTimer.Start();
                 matrixAnimationTimer.Start();
-                MiscUtilities.soundPlayers["plant_stage_sound"].Play();
+                MiscUtilities.SoundPlayers["plant_stage_sound"].Play();
                 SignalUnitAnimation();
             }
             FocusFirstDigitBlock();
@@ -84,7 +83,7 @@ namespace Defuser_Imitation.Components.UserControls
             StDeviceCode.PreviewKeyDown -= DisableKeyboard_PreviewKeyDown;
             activationPhaseTimer.Start();
             matrixAnimationTimer.Start();
-            MiscUtilities.soundPlayers["plant_stage_sound"].Play();
+            MiscUtilities.SoundPlayers["plant_stage_sound"].Play();
             SignalUnitAnimation();
         }
 
@@ -92,17 +91,17 @@ namespace Defuser_Imitation.Components.UserControls
         {
             if (activationPhaseCountdown > 15)
             {
-                MiscUtilities.soundPlayers["plant_stage_sound"].Position = TimeSpan.FromSeconds(0);
+                MiscUtilities.SoundPlayers["plant_stage_sound"].Position = TimeSpan.FromSeconds(0);
             }
             else
             {
-                if (MiscUtilities.soundPlayers["plant_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
+                if (MiscUtilities.SoundPlayers["plant_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
                 {
-                    MiscUtilities.soundPlayers["plant_stage_sound"].Position = TimeSpan.FromSeconds(0);
+                    MiscUtilities.SoundPlayers["plant_stage_sound"].Position = TimeSpan.FromSeconds(0);
                 }
                 else
                 {
-                    MiscUtilities.soundPlayers["plant_stage_sound"].Position = MiscUtilities.soundPlayers["plant_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(activationPhaseCountdown);
+                    MiscUtilities.SoundPlayers["plant_stage_sound"].Position = MiscUtilities.SoundPlayers["plant_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(activationPhaseCountdown);
                 }
             }
         }
@@ -112,15 +111,15 @@ namespace Defuser_Imitation.Components.UserControls
         }
         private void activationPhaseTimer_Tick(object sender, EventArgs e)
         {
-            if (activationPhaseCountdown == 15 && MiscUtilities.soundPlayers["plant_stage_sound"].Position < MiscUtilities.soundPlayers["plant_stage_sound"].NaturalDuration - TimeSpan.FromSeconds(15))
+            if (activationPhaseCountdown == 15 && MiscUtilities.SoundPlayers["plant_stage_sound"].Position < MiscUtilities.SoundPlayers["plant_stage_sound"].NaturalDuration - TimeSpan.FromSeconds(15))
             {
-                if (MiscUtilities.soundPlayers["plant_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
+                if (MiscUtilities.SoundPlayers["plant_stage_sound"].NaturalDuration < TimeSpan.FromSeconds(15))
                 {
-                    MiscUtilities.soundPlayers["plant_stage_sound"].Position = TimeSpan.FromSeconds(0);
+                    MiscUtilities.SoundPlayers["plant_stage_sound"].Position = TimeSpan.FromSeconds(0);
                 }
                 else
                 {
-                    MiscUtilities.soundPlayers["plant_stage_sound"].Position = MiscUtilities.soundPlayers["plant_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(activationPhaseCountdown);
+                    MiscUtilities.SoundPlayers["plant_stage_sound"].Position = MiscUtilities.SoundPlayers["plant_stage_sound"].NaturalDuration.TimeSpan - TimeSpan.FromSeconds(activationPhaseCountdown);
                 }
             }
             if (activationPhaseCountdown != 1)
@@ -242,7 +241,7 @@ namespace Defuser_Imitation.Components.UserControls
             if (e.Key == Key.Back || e.Key == Key.Delete)
             {
                 SolidColorBrush localColorResource = (SolidColorBrush)TryFindResource("LocalColor");
-                localColorResource.Color = MiscUtilities.defaultColor;
+                localColorResource.Color = MiscUtilities.DefaultColor;
                 if (string.IsNullOrWhiteSpace(((TextBox)sender).Text))
                 {
                     FocusPreviousDigitBlock((UIElement)sender);
@@ -274,7 +273,7 @@ namespace Defuser_Imitation.Components.UserControls
                     else
                     {
                         SolidColorBrush localColorResource = TryFindResource("LocalColor") as SolidColorBrush;
-                        localColorResource.Color = MiscUtilities.redColor;
+                        localColorResource.Color = MiscUtilities.RedColor;
                         return;
                     }
                 }
@@ -371,7 +370,7 @@ namespace Defuser_Imitation.Components.UserControls
         {
             activationPhaseTimer.Stop();
             matrixAnimationTimer.Stop();
-            MiscUtilities.soundPlayers["plant_stage_sound"].Stop();
+            MiscUtilities.SoundPlayers["plant_stage_sound"].Stop();
         }
         private void FinishRound(int ResultCode)
         {
@@ -421,7 +420,7 @@ namespace Defuser_Imitation.Components.UserControls
             {
                 activationPhaseTimer.Start();
                 matrixAnimationTimer.Start();   
-                MiscUtilities.soundPlayers["plant_stage_sound"].Play();
+                MiscUtilities.SoundPlayers["plant_stage_sound"].Play();
             }
             StDeviceCode.IsEnabled = true;
             StDeviceCode.Children[digitBlockIndex].Focus();
@@ -435,7 +434,7 @@ namespace Defuser_Imitation.Components.UserControls
             }
             activationPhaseTimer.Stop();
             matrixAnimationTimer.Stop();
-            MiscUtilities.soundPlayers["plant_stage_sound"].Pause();
+            MiscUtilities.SoundPlayers["plant_stage_sound"].Pause();
             StDeviceCode.IsEnabled = false;
             RoundPauseControl roundPauseControl = new RoundPauseControl(_playPageGrid);
             Panel.SetZIndex(roundPauseControl, 3);

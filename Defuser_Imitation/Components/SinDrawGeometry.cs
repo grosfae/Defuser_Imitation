@@ -3,6 +3,7 @@ using System.Windows;
 
 namespace Defuser_Imitation.Components
 {
+    //Не используется
     public class SinDrawGeometry
     {
         private double x0;

@@ -12,7 +12,7 @@
         WindowStartupLocation="CenterScreen"
         BorderThickness="1"
         BorderBrush="#FF2BA1E7"
-        Title="Defuser_Imitation_Updater" Height="450" Width="800">
+        Title="Defuser_Imitation_Updater" Height="450" Width="800" StateChanged="Window_StateChanged">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -43,7 +43,7 @@
                 <TextBlock Name="TbState" FontFamily="{StaticResource RobotoMonoFont}" FontWeight="Thin" Foreground="White" FontSize="20" Padding="10 0 0 4"/>
                 <TextBlock Name="TbRatio" FontFamily="{StaticResource RobotoMonoFont}" FontWeight="Thin" Foreground="White" FontSize="20" HorizontalAlignment="Right" Padding="0 0 10 4"/>
             </Grid>
-            <ProgressBar Name="PbUpdate" Height="12" Foreground="#FF2BA1E7" Value="0" Visibility="Visible"/>
+            <ProgressBar Name="PbUpdate" Height="12" Foreground="#FF2BA1E7" Value="0" Visibility="Collapsed"/>
         </StackPanel>
     </Grid>
 </Window>

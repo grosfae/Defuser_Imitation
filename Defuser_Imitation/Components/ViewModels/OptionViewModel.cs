@@ -21,6 +21,18 @@ namespace Defuser_Imitation.Components.ViewModels
             "Не использовать", "Использовать"
         };
         private bool settingsChanged = false;
+        private int activationPhaseCountdown = Settings.Default.ActivationPhaseCountdown;
+        private int deactivationPhaseCountdown = Settings.Default.DeactivationPhaseCountdown;
+        private int preparationPhaseCountdown = Settings.Default.PreparationPhaseCountdown;
+        private int activationPhaseVolume = Settings.Default.ActivationPhaseVolume;
+        private int deactivationPhaseVolume = Settings.Default.DeactivationPhaseVolume;
+        private int preparationPhaseVolume = Settings.Default.PreparationPhaseVolume;
+        private int complitionPhaseVolume = Settings.Default.ComplitionPhaseVolume;
+        private int deviceTypeCode = Settings.Default.DeviceTypeCode;
+        private int manualInputDigitsCount = Settings.Default.ManualInputDigitsCount;
+        private int useUSBDevice = Settings.Default.UseUSBDevice;
+        private string deviceCode = Settings.Default.DeviceCode;
+        private string usbDeviceName = Settings.Default.USBDeviceName;
         public List<string> TypeCodeList
         {
             get
@@ -49,11 +61,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.ActivationPhaseCountdown;
+                return activationPhaseCountdown;
             }
             set
             {
-                Settings.Default.ActivationPhaseCountdown = value;
+                activationPhaseCountdown = value;
                 OnPropertyChanged(nameof(ActivationPhaseCountdown));
                 SettingsHasBeenChanged();
             }
@@ -62,11 +74,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.DeactivationPhaseCountdown;
+                return deactivationPhaseCountdown;
             }
             set
             {
-                Settings.Default.DeactivationPhaseCountdown = value;
+                deactivationPhaseCountdown = value;
                 OnPropertyChanged(nameof(DeactivationPhaseCountdown));
                 SettingsHasBeenChanged();
             }
@@ -75,11 +87,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.PreparationPhaseCountdown;
+                return preparationPhaseCountdown;
             }
             set
             {
-                Settings.Default.PreparationPhaseCountdown = value;
+                preparationPhaseCountdown = value;
                 OnPropertyChanged(nameof(PreparationPhaseCountdown));
                 SettingsHasBeenChanged();
             }
@@ -88,11 +100,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.ActivationPhaseVolume;
+                return activationPhaseVolume;
             }
             set
             {
-                Settings.Default.ActivationPhaseVolume = value;
+                activationPhaseVolume = value;
                 OnPropertyChanged(nameof(ActivationPhaseVolume));
                 SettingsHasBeenChanged();
             }
@@ -101,11 +113,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.DeactivationPhaseVolume;
+                return deactivationPhaseVolume;
             }
             set
             {
-                Settings.Default.DeactivationPhaseVolume = value;
+                deactivationPhaseVolume = value;
                 OnPropertyChanged(nameof(DeactivationPhaseVolume));
                 SettingsHasBeenChanged();
             }
@@ -114,11 +126,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.PreparationPhaseVolume;
+                return preparationPhaseVolume;
             }
             set
             {
-                Settings.Default.PreparationPhaseVolume = value;
+                preparationPhaseVolume = value;
                 OnPropertyChanged(nameof(PreparationPhaseVolume));
                 SettingsHasBeenChanged();
             }
@@ -127,11 +139,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.ComplitionPhaseVolume;
+                return complitionPhaseVolume;
             }
             set
             {
-                Settings.Default.ComplitionPhaseVolume = value;
+                complitionPhaseVolume = value;
                 OnPropertyChanged(nameof(ComplitionPhaseVolume));
                 SettingsHasBeenChanged();
             }
@@ -140,11 +152,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.DeviceTypeCode;
+                return deviceTypeCode;
             }
             set
             {
-                Settings.Default.DeviceTypeCode = value;
+                deviceTypeCode = value;
                 OnPropertyChanged(nameof(DeviceTypeCode));
                 SettingsHasBeenChanged();
             }
@@ -153,11 +165,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.ManualInputDigitsCount;
+                return manualInputDigitsCount;
             }
             set
             {
-                Settings.Default.ManualInputDigitsCount = value;
+                manualInputDigitsCount = value;
                 OnPropertyChanged(nameof(ManualInputDigitsCount));
                 SettingsHasBeenChanged();
             }
@@ -166,11 +178,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.UseUSBDevice;
+                return useUSBDevice;
             }
             set
             {
-                Settings.Default.UseUSBDevice = value;
+                useUSBDevice = value;
                 OnPropertyChanged(nameof(UseUSBDevice));
                 SettingsHasBeenChanged();
             }
@@ -179,11 +191,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.DeviceCode;
+                return deviceCode;
             }
             set
             {
-                Settings.Default.DeviceCode = value;
+                deviceCode = value;
                 OnPropertyChanged(nameof(DeviceCode));
                 SettingsHasBeenChanged();
             }
@@ -192,11 +204,11 @@ namespace Defuser_Imitation.Components.ViewModels
         {
             get
             {
-                return Settings.Default.USBDeviceName;
+                return usbDeviceName;
             }
             set
             {
-                Settings.Default.USBDeviceName = value;
+                usbDeviceName = value;
                 OnPropertyChanged(nameof(USBDeviceName));
                 SettingsHasBeenChanged();
             }
@@ -218,17 +230,59 @@ namespace Defuser_Imitation.Components.ViewModels
             settingsChanged = true;
             OnSettingsChangedEvent();
         }
-        public void SaveSettings()
+        private void CheckDeviceCode()
         {
             if (DeviceCode.Length < 8)
             {
-                int CodeLength = DeviceCode.Length;
-                for (int i = 0; i < 8 - CodeLength; i++)
+                int codeLength = DeviceCode.Length;
+                for (int i = 0; i < 8 - codeLength; i++)
                 {
                     DeviceCode += 0;
                 }
             }
+        }
+        private void CheckUSBDeviceName()
+        {
+            if (string.IsNullOrWhiteSpace(USBDeviceName))
+            {
+                USBDeviceName = "USB-Device-Name";
+            }
+        }
+        public void SaveSettings()
+        {
+            CheckDeviceCode();
+            CheckUSBDeviceName();
+            Settings.Default.ActivationPhaseCountdown = activationPhaseCountdown;
+            Settings.Default.DeactivationPhaseCountdown = deactivationPhaseCountdown;
+            Settings.Default.PreparationPhaseCountdown = preparationPhaseCountdown;
+            Settings.Default.ActivationPhaseVolume = activationPhaseVolume;
+            Settings.Default.DeactivationPhaseVolume = deactivationPhaseVolume;
+            Settings.Default.PreparationPhaseVolume = preparationPhaseVolume;
+            Settings.Default.ComplitionPhaseVolume = complitionPhaseVolume;
+            Settings.Default.DeviceTypeCode = deviceTypeCode;
+            Settings.Default.ManualInputDigitsCount = manualInputDigitsCount;
+            Settings.Default.UseUSBDevice = useUSBDevice;
+            Settings.Default.DeviceCode = deviceCode;
+            Settings.Default.USBDeviceName = usbDeviceName;
             Settings.Default.Save();
+            SettingsChanged = false;
+        }
+        public void ResetSettings()
+        {
+            Settings.Default.Reset();
+            Settings.Default.Save();
+            ActivationPhaseCountdown = Settings.Default.ActivationPhaseCountdown;
+            DeactivationPhaseCountdown = Settings.Default.DeactivationPhaseCountdown;
+            PreparationPhaseCountdown = Settings.Default.PreparationPhaseCountdown;
+            ActivationPhaseVolume = Settings.Default.ActivationPhaseVolume;
+            DeactivationPhaseVolume = Settings.Default.DeactivationPhaseVolume;
+            PreparationPhaseVolume = Settings.Default.PreparationPhaseVolume;
+            ComplitionPhaseVolume = Settings.Default.ComplitionPhaseVolume;
+            DeviceTypeCode = Settings.Default.DeviceTypeCode;
+            ManualInputDigitsCount = Settings.Default.ManualInputDigitsCount;
+            UseUSBDevice = Settings.Default.UseUSBDevice;
+            DeviceCode = Settings.Default.DeviceCode;
+            USBDeviceName = Settings.Default.USBDeviceName;
             SettingsChanged = false;
         }
     }

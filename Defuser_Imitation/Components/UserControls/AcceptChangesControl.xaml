@@ -10,7 +10,7 @@
         <Grid.Background>
             <SolidColorBrush Color="#FF121212" Opacity="0.8"/>
         </Grid.Background>
-        <Viewbox Width="620" Height="1080">
+        <Viewbox>
             <Grid Width="620" Height="1080" Background="#24242A">
                 <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30 170 0 0">
                     <TextBlock FontFamily="{StaticResource BravoFont}" Foreground="White" Text="ПРИНЯТЬ ИЗМЕНЕНИЯ?" FontSize="80" FontWeight="Bold"/>
